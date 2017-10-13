@@ -28,15 +28,15 @@ dr4pl <- function(...) UseMethod("dr4pl")
 #' column and dose values in second column.
 #' @param data Data frame containing variables in the model.
 #' @param init.parm Vector of initial parameters to be optimized in the model.
-#' @param decline Indicator of whether the curve is a decline \eqn{\theta[3]<0} 
-#' or growth curve \eqn{\theta[3]>0}. The default is "auto" which indicates 
-#' that no restriction is imposed on the slope parameter \eqn{\theta[3]}. The
-#' option "decline" will impose a restriction \eqn{\theta[3]<=0} while the
-#' option "growth" will impose a restriction \eqn{\theta[3]>=0} in an optimization
-#' process.
+#' @param trend Indicator of whether a dose-response curve is a decreasing 
+#' \eqn{\theta[3]<0} or increasing curve \eqn{\theta[3]>0}. The default is "auto" 
+#' which indicates that the trend of the curve is automatically determined by
+#' data. The option "decreasing" will impose a restriction \eqn{\theta[3]<=0} 
+#' while the option "increasing" will impose a restriction \eqn{\theta[3]>=0} in an 
+#' optimization process.
 #' @param method.init Method of obtaining initial values of the parameters.
-#' If it is NULL, a default "logistic" regression method will be used. Assign
-#' "Mead" to use Mead's method.
+#' If it is NULL, a default "Mead" method will be used. Assign
+#' "logistic" to use the logistic method.
 #' @param method.optim Method of optimization of the loss function specified by
 #' \code{method.robust}. This function argument is directly passed to the function
 #' \code{\link[stats]{constrOptim}} which is provided in the \pkg{base} package of R.
@@ -81,8 +81,8 @@ dr4pl <- function(...) UseMethod("dr4pl")
 dr4pl.formula <- function(formula,
                           data = list(),
                           init.parm = NULL,
-                          decline = "auto",
-                          method.init = "logistic",
+                          trend = "auto",
+                          method.init = "Mead",
                           method.optim = "Nelder-Mead",
                           method.robust = NULL,
                           ...) {
@@ -94,7 +94,7 @@ dr4pl.formula <- function(formula,
   est <- dr4pl.default(dose = dose,
                        response = response,
                        init.parm = init.parm,
-                       decline = decline,
+                       trend = trend,
                        method.init = method.init,
                        method.optim = method.optim,
                        method.robust = method.robust,
@@ -139,14 +139,13 @@ dr4pl.formula <- function(formula,
 dr4pl.default <- function(dose,
                           response,
                           init.parm = NULL,
-                          decline = "auto",
-                          method.init = "logistic",
+                          trend = "auto",
+                          method.init = "Mead",
                           method.optim = "Nelder-Mead",
                           method.robust = NULL,
                           ...) {
 
- 
-   types.decline <- c("auto", "decline", "growth")
+  types.trend <- c("auto", "decreasing", "increasing")
   types.method.init <- c("logistic", "Mead")
   types.method.optim <- c("Nelder-Mead", "BFGS", "CG", "SANN")
   
@@ -172,26 +171,28 @@ dr4pl.default <- function(dose,
     stop("The optimization method name should be one of \"Nelder-Mead\", \"BFGS\",
          \"CG\", \"L-BFGS-B\" and \"SANN\".")
   }
-  if(!is.element(decline, types.decline)) {
+  if(!is.element(trend, types.trend)) {
     
-    stop("The type of the \"decline\" parameter should be one of \"auto\", \"decline\" and \"growth\".")
+    stop("The type of the \"trend\" parameter should be one of \"auto\", \"decreasing\" and \"increasing\".")
   }
 
   # Fit a 4PL model
   obj.dr4pl <- dr4plEst(dose = dose,
                         response = response,
                         init.parm = init.parm,
-                        decline = decline,
+                        trend = trend,
                         method.init = method.init,
                         method.optim = method.optim,
                         method.robust = method.robust)
 
+  obj.dr4pl$call <- match.call()
+  class(obj.dr4pl) <- "dr4pl"
+  
   ### When convergence failure happens.
-  if(obj.dr4pl$convergence == FALSE) {  
+  if(obj.dr4pl$convergence == FALSE) {
 
-    
-    ### Decide the method of robust estimation which is more robust than the method
-    ### input by a user.
+    ## Decide the method of robust estimation which is more robust than the method
+    ## input by a user.
     if(is.null(method.robust)) {
       
       method.robust.new <- "absolute"
@@ -204,12 +205,14 @@ dr4pl.default <- function(dose,
     }
     
     n <- obj.dr4pl$sample.size  # Number of data points
+    theta.fail <- obj.dr4pl$parameters
+    retheta.fail <- ParmToLog(theta.fail)  # Start from the failure parameters
     
     # Fit a 4PL model to data
-    obj.dr4pl <- dr4plEst(dose = dose, 
+    obj.dr4pl <- dr4plEst(dose = dose,
                           response = response,
-                          init.parm = init.parm,
-                          decline = decline,
+                          init.parm = retheta.fail,
+                          trend = trend,
                           method.init = method.init,
                           method.optim = method.optim,
                           method.robust = method.robust.new)
@@ -225,7 +228,7 @@ dr4pl.default <- function(dose,
     abs.res.sorted <- sort(abs(residuals), index.return = TRUE)$x
     indices.sorted <- sort(abs(residuals), index.return = TRUE)$ix
     
-    Q <- 0.05  # Refer to Motulsky and Brown (2006)
+    Q <- 0.01  # Refer to Motulsky and Brown (2006)
     alphas <- Q*seq(from = n, to = 1, by = -1)/n
     p.values <- 2*pt(q = abs.res.sorted/scale.robust, df = n - 4, lower.tail = FALSE)
     
@@ -239,12 +242,13 @@ dr4pl.default <- function(dose,
       indices.outlier <- indices.sorted[seq(from = min(indices.FDR), to = n, by = 1)]
     }
     
-    plot(obj.dr4pl, indices.outlier = indices.outlier)
+    obj.dr4pl$convergence <- FALSE
+    obj.dr4pl$call <- match.call()
+    class(obj.dr4pl) <- "dr4pl"
+    
+    obj.dr4pl$robust.plot <- plot(obj.dr4pl, indices.outlier = indices.outlier)
   }
   
-  obj.dr4pl$call <- match.call()
-
-  class(obj.dr4pl) <- "dr4pl"
   return(obj.dr4pl)
 }
 
@@ -261,15 +265,15 @@ dr4pl.default <- function(dose,
 #' @param response Vector of responses
 #' @param init.parm Vector of initial parameters of the 4PL model supplied by a
 #'   user.
-#' @param decline Indicator of whether the curve is a decline \eqn{\theta[3]<0} 
-#'   or growth curve \eqn{\theta[3]>0}. The default is "auto" which indicates 
-#'   that no restriction is imposed on the slope parameter \eqn{\theta[3]}. The
-#'   option "decline" will impose a restriction \eqn{\theta[3]<=0} while the
-#'   option "growth" will impose a restriction \eqn{\theta[3]>=0} in an optimization
-#'   process.
+#' @param trend Indicator of whether a dose-response curve is a decreasing 
+#' \eqn{\theta[3]<0} or increasing curve \eqn{\theta[3]>0}. The default is "auto" 
+#' which indicates that the trend of the curve is automatically determined by
+#' data. The option "decreasing" will impose a restriction \eqn{\theta[3]<=0} 
+#' while the option "increasing" will impose a restriction \eqn{\theta[3]>=0} in an 
+#' optimization process.
 #' @param method.init Method of obtaining initial values of the parameters.
 #'   Should be one of "logistic" for the logistic method or "Mead" for the Mead
-#'   method. The default option is the logistic method.
+#'   method. The default option is the Mead method.
 #' @param method.optim Method of optimization of the parameters. This argument
 #'   is directly delivered to the \code{constrOptim} function provided in the
 #'   "base" package of R.
@@ -280,7 +284,7 @@ dr4pl.default <- function(dose,
 #'      - Tukey: Tukey's biweight loss
 dr4plEst <- function(dose, response,
                      init.parm,
-                     decline,
+                     trend,
                      method.init,
                      method.optim,
                      method.robust) {
@@ -291,9 +295,11 @@ dr4plEst <- function(dose, response,
   n <- length(x)  # Number of observations
   
   # Choose the loss function depending on the robust estimation method
-  err.fcn <- ErrFcn(method.robust)
+  loss.fcn <- ErrFcn(method.robust)
   # Currently only the gradient function for the squared loss is implemented
   grad <- GradientSquaredLossLogIC50
+  
+  tuning.barrier <- 1e-04  # Tuning parameter for the log Barrier method
   
   ### When initial parameter estimates are given
   if(!is.null(init.parm)) {
@@ -305,146 +311,29 @@ dr4plEst <- function(dose, response,
     }
     
     # Use given initial parameter estimates
-    theta.re.init <- init.parm
-    theta.re.init[2] <- log10(init.parm[2])
+    retheta.init <- init.parm
+    retheta.init[2] <- log10(init.parm[2])
     
-    names(theta.re.init) <- c("Upper limit", "Log10(IC50)", "Slope", "Lower limit")
-    
+    names(retheta.init) <- c("Upper limit", "Log10(IC50)", "Slope", "Lower limit")
+
+    constr.mat <- matrix(c(1, 0, 0, -1), nrow = 1, ncol = 4)
+    constr.vec <- 0
+        
     # Impose a constraint on the slope parameter based on the function argument
-    # `decline`.
-    if(decline == "decline") {
-      
-      constr.mat <- matrix(c(0, 0, -1, 0), nrow = 1, ncol = 4)
-      constr.vec <- 0
-    } else if(decline == "growth") {
-      
-      constr.mat <- matrix(c(0, 0, 1, 0), nrow = 1, ncol = 4)
-      constr.vec <- 0
-    }
-    
-    # Fit a 4PL model to data
-    if(decline == "auto") {
-      
-      optim.dr4pl <- optim(par = theta.re.init,
-                           fn = err.fcn,
-                           gr = GradientSquaredLossLogIC50,
-                           method = method.optim,
-                           hessian = TRUE,
-                           x = x,
-                           y = y)
-    } else {
-      
-      optim.dr4pl <- constrOptim(theta = theta.re.init,
-                                 f = err.fcn,
-                                 grad = grad,
-                                 ui = constr.mat,
-                                 ci = constr.vec,
-                                 method = method.optim,
-                                 hessian = TRUE,
-                                 x = x,
-                                 y = y)
-    }
-    
-    loss <- optim.dr4pl$value
-    hessian <- optim.dr4pl$hessian
-    theta.re <- optim.dr4pl$par
-    
-    theta <- theta.re
-    theta[2] <- 10^theta.re[2]
-    
-  ### When initial parameter values are not given.
-  } else {
-    
-    ### Obtain initial values of parameters.
-    theta.init <- FindInitialParms(x, y, decline, method.init, method.robust)
-    names(theta.init) <- c("Upper limit", "IC50", "Slope", "Lower limit")
-    
-    theta.re.init <- theta.init
-    theta.re.init[2] <- log10(theta.init[2])
-    names(theta.re.init) <- c("Upper limit", "Log(IC50)", "Slope", "Lower limit")
-    
-    ### Compute confidence intervals of the true parameters
-    deriv.f <- DerivativeF(theta.init, x)
-    residuals <- Residual(theta.init, x, y)
-    
-    C.hat.inv <- try(solve(t(deriv.f)%*%deriv.f), silent = TRUE)  # Inverse matrix
-
-    if(inherits(C.hat.inv, "try-error")) {
-      
-      C.hat.Chol <- try(chol(t(deriv.f)%*%deriv.f, silent = TRUE))  # Cholesky decomposition
-      
-      if(inherits(C.hat.Chol, "try-error")) {
-        
-        C.hat.Chol <- try(chol(0.99*t(deriv.f)%*%deriv.f + 0.01*diag(dim(deriv.f)[2])))
-        
-        if(inherits(C.hat.Chol, "try-error")) {
-         
-           C.hat.Chol <- NULL
-        }
-      }
-      
-      if(!is.null(C.hat.Chol)) {
-        
-        C.hat.inv <- chol2inv(C.hat.Chol)
-      } else {
-        
-        C.hat.inv <- NULL# Proceed with the method of Wang et al. (2010)
-      }
-    }
-    
-    s <- sqrt(sum(residuals^2)/(n - 4))
-    
-    q.t <- qt(0.9999, df = n - 4)
-    std.err <- s*sqrt(diag(C.hat.inv))  # Standard error
-    ci <- cbind(theta.init - q.t*std.err, theta.init + q.t*std.err)  # Confidence intervals
-
-    ### Perform constrained optimization
-    bounds.theta.2 <- ci[2, ]
-    bounds.theta.3 <- ci[3, ]
-    
-    # Sometimes the lower bound of the IC50 parameter is negative.
-    if(bounds.theta.2[1]<0) {
-      
-      constr.mat <- matrix(rbind(c(0, -1, 0, 0),
-                                 c(0, 0, 1, 0),
-                                 c(0, 0, -1, 0)),
-                           nrow = 3,
-                           ncol = 4)
-      constr.vec <- c(-log10(bounds.theta.2[2]), 
-                      bounds.theta.3[1], -bounds.theta.3[2])
-
-    } else {
-      
-      constr.mat <- matrix(rbind(c(0, 1, 0, 0),
-                                 c(0, -1, 0, 0),
-                                 c(0, 0, 1, 0),
-                                 c(0, 0, -1, 0)),
-                           nrow = 4,
-                           ncol = 4)
-      constr.vec <- c(log10(bounds.theta.2[1]), -log10(bounds.theta.2[2]),
-                      bounds.theta.3[1], -bounds.theta.3[2])
-    }
-    
-    # Impose a constraint on the slope parameter based on the function argument
-    # `decline`.
-    if(decline == "decline") {
+    # "trend".
+    if(trend == "decreasing") {
       
       constr.mat <- rbind(constr.mat, matrix(c(0, 0, -1, 0), nrow = 1, ncol = 4))
       constr.vec <- c(constr.vec, 0)
-    } else if(decline == "growth") {
+    } else if(trend == "increasing") {
       
       constr.mat <- rbind(constr.mat, matrix(c(0, 0, 1, 0), nrow = 1, ncol = 4))
       constr.vec <- c(constr.vec, 0)
     }
-
-    if(any(constr.mat%*%theta.re.init<constr.vec)) {
-      
-      stop("Initial parameter values are not in the interior of the feasible region.")
-    }
-
-    # Fit the 4PL model
-    optim.dr4pl <- constrOptim(theta = theta.re.init,
-                               f = err.fcn,
+    
+    # Fit a 4PL model to data
+    optim.dr4pl <- constrOptim(theta = retheta.init,
+                               f = loss.fcn,
                                grad = grad,
                                ui = constr.mat,
                                ci = constr.vec,
@@ -452,17 +341,74 @@ dr4plEst <- function(dose, response,
                                hessian = TRUE,
                                x = x,
                                y = y)
+
+    loss <- optim.dr4pl$value
+    hessian <- optim.dr4pl$hessian
+    retheta <- optim.dr4pl$par
+    
+    theta <- retheta
+    theta[2] <- 10^retheta[2]
+    
+  ### When initial parameter values are not given.
+  } else {
+    
+    ## Obtain initial parameter estimates.
+    theta.init <- FindInitialParms(x, y, trend, method.init, method.robust)
+
+    retheta.init <- theta.init  # Reparameterized parameters
+    retheta.init[2] <- log10(theta.init[2])
+    names(retheta.init)[2] <- paste("Log(", names(theta.init)[2], ")", sep = "")
+    
+    Hill.bounds <- FindHillBounds(x, y, retheta.init)
+    
+    constr.mat <- matrix(rbind(c(1, 0, 0, -1),
+                               c(0, 1, 0, 0),
+                               c(0, -1, 0, 0),
+                               c(0, 0, 1, 0),
+                               c(0, 0, -1, 0)),
+                         nrow = 5,
+                         ncol = 4)
+    constr.vec <- c(0, Hill.bounds$LogTheta2[1], -Hill.bounds$LogTheta2[2],
+                    Hill.bounds$Theta3[1], -Hill.bounds$Theta3[2])
+
+    # Impose a constraint on the slope parameter based on the function argument
+    # "trend".
+    if(trend == "decreasing") {
+      
+      constr.mat <- rbind(constr.mat, matrix(c(0, 0, -1, 0), nrow = 1, ncol = 4))
+      constr.vec <- c(constr.vec, 0)
+    } else if(trend == "increasing") {
+      
+      constr.mat <- rbind(constr.mat, matrix(c(0, 0, 1, 0), nrow = 1, ncol = 4))
+      constr.vec <- c(constr.vec, 0)
+    }
+
+    if(any(constr.mat%*%retheta.init<constr.vec)) {
+      
+      stop("Initial parameter values are not in the interior of the feasible region.")
+    }
+
+    # Fit the 4PL model
+    optim.dr4pl <- constrOptim(theta = retheta.init,
+                               f = loss.fcn,
+                               grad = grad,
+                               ui = constr.mat,
+                               ci = constr.vec,
+                               method = method.optim,
+                               hessian = TRUE,
+                               mu = tuning.barrier,
+                               x = x,
+                               y = y)
     
     loss <- optim.dr4pl$value
     hessian <- optim.dr4pl$hessian
-    theta.re <- optim.dr4pl$par
+    retheta <- optim.dr4pl$par
     
-    theta <- theta.re
-    theta[2] <- 10^theta.re[2]
+    theta <- LogToParm(retheta)
   }
   
   ### If boundaries are hit
-  if(any(constr.mat%*%theta.re == constr.vec)) {
+  if(any(abs(constr.mat%*%retheta - constr.vec)<tuning.barrier)) {
     
     convergence <- FALSE
   } 
