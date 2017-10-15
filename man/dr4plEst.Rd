@@ -36,6 +36,10 @@ is directly delivered to the \code{constrOptim} function provided in the
 - Huber: Huber's loss 
 - Tukey: Tukey's biweight loss}
 }
+\value{
+List of final parameter estimates, name of robust estimation, loss value
+and so on.
+}
 \description{
 Private function that actually fits the 4PL model to data. If the
   Hill bounds are attained at the end of optimization processes, then an
