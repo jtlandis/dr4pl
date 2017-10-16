@@ -63,7 +63,7 @@ plot(a)
 ``` r
 ## basic example code
 ## example requires the dr4pl package to be loaded
-b <- dr4pl(drc_error_1$Response~drc_error_1$Dose, method.robust = "Tukey") #Tukey's Biweight loss function estimates best for this particular data set
+b <- dr4pl(drc_error_1$Response~drc_error_1$Dose, method.init = "logistic", method.robust = "Tukey") 
 plot(b)
 #> Warning: Transformation introduced infinite values in continuous x-axis
 
@@ -76,14 +76,14 @@ plot(b)
 summary(b)
 #> $call
 #> dr4pl.formula(formula = drc_error_1$Response ~ drc_error_1$Dose, 
-#>     method.robust = "Tukey")
+#>     method.init = "logistic", method.robust = "Tukey")
 #> 
 #> $coefficients
-#>                  Estimate
-#> Upper limit  7.907228e+04
-#> IC50         4.261176e-13
-#> Slope       -7.370263e-02
-#> Lower limit -7.837146e+03
+#>                 Estimate         2.5 %       97.5 %
+#> UpperLimit  7.913355e+04  6.914512e+04 8.912197e+04
+#> IC50        4.258701e-13  4.073035e-25 4.452830e-01
+#> Slope      -7.370728e-02 -1.713284e-01 2.391385e-02
+#> LowerLimit -8.393064e+03 -3.401134e+04 1.722521e+04
 #> 
 #> attr(,"class")
 #> [1] "summary.dr4pl"
