@@ -1,14 +1,10 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-
 language: R
 sudo: false
 cache: packages
-
 deploy:
   provider: releases
-  api_key: "696b11c229aa329daa317bfb1104125d42cca231"
-  file: "dr4pl_1.0.0.tar.gz"
-  skip_cleanup: true
+  api_key:
+    secure: rxlxJWY4K8IB3yTcdN88Kiv2pZoYTOqdfm19geVTGpJx09jnYwIKIp5Zwijgtq0rtzTz1HsvzZRGGXihfjLhGQenK8yr+SXkCt/Y8Z7sN8bpCGAOuyl8gkGAnISF+UIN7v4hEp2fT+RT0p6Szgv/Ibv+ciaJBGZT0n9PwfZ8JDzRsz6kAg7SpoBQUZ7JCHGeCu5sxRNJFeYxtZtQN4KHUUCEg3Y51qkduM+v6jfL0TO1VEW8PMKVQ1JPGlwBuj8LCwnUxkMZXpSJyBzbrBgMFFpp0RL3hhaJBgBH6LTSqjemEFbqPfkSJFw/27G8a97QdIF3GRzW5FvLuuQwGvpO+IBvWz3uaD5kRZriZigOusePgCrXMEq6M6ogI581H528r5xEvdwpTk/fL+R9eSxVLjmU5zOPTRdZaojd0yDN0e75o1xWN7TscTqowqyHP+Yq+gidKPe24yyq2Dl9adO3oTS/VmbhnBzOYp8r3MtGpBCUAmCqOSzR68ltpUuI9lPoQvIyhhoTyOPnfHWlRJOfVODe64c5pOH7X45oIKN+VC7umfInaTifSSDaK762qlDYGXaqJw/OSXORKtyJtlC3NzHyTi2rUQ3i1T3li7QmDdahjoUYJeIhXAPWwFj7PQUvj7lFeQ/VRMOR4i1vpGxsBxoJGMAtbhcoIJ/IwYLrscQ=
+  file: dr4pl_1.0.0.tar.gz
   on:
-    tags: true
-
+    repo: aubreybailey/dr4pl
