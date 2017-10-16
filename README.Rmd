@@ -27,7 +27,7 @@ knitr::opts_chunk$set(
 
 #release version:
 
-[![packageversion](https://img.shields.io/badge/GitHub%20Package%20version-0.97-orange.svg?style=flat-square)](commits/master)
+[![packageversion](https://img.shields.io/badge/GitHub%20Package%20version-1.0.0-orange.svg?style=flat-square)](commits/master)
 
 ##dr4pl
 
