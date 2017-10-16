@@ -27,7 +27,7 @@ error = function(err) {
 
 ## ------------------------------------------------------------------------
 a <-tryCatch({
-  dr4pl(Response~Dose, data = drc_error_1, method.init = "Mead")
+  dr4pl(Response~Dose, data = drc_error_1, method.init = "logistic", method.robust = "Tukey")
 },
 warning = function(war) {
     # warning handler picks up where error was generated
@@ -95,7 +95,7 @@ error = function(err) {
 
 ## ------------------------------------------------------------------------
 a <-tryCatch({
-  dr4pl(Response~Dose, data = drc_error_3, method.init = "logistic", method.robust = "absolute")
+  dr4pl(Response~Dose, data = drc_error_3, method.init = "Mead", method.robust = "Huber")
 },
 warning = function(war) {
     # warning handler picks up where error was generated
