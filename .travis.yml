@@ -10,3 +10,5 @@ deploy:
   file: dr4pl_1.0.0.tar.gz
   on:
     repo: aubreybailey/dr4pl
+    tags: true
+    branch: releases
