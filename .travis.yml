@@ -4,6 +4,7 @@ language: R
 sudo: false
 cache: packages
 deploy:
+  skip_cleanup: true
   provider: releases
   api_key:
     secure: rxlxJWY4K8IB3yTcdN88Kiv2pZoYTOqdfm19geVTGpJx09jnYwIKIp5Zwijgtq0rtzTz1HsvzZRGGXihfjLhGQenK8yr+SXkCt/Y8Z7sN8bpCGAOuyl8gkGAnISF+UIN7v4hEp2fT+RT0p6Szgv/Ibv+ciaJBGZT0n9PwfZ8J$
