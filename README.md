@@ -1,16 +1,13 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 build status:
-=============
 
 [![Build Status](https://travis-ci.org/aubreybailey/dr4pl.svg?branch=master)](https://travis-ci.org/aubreybailey/dr4pl)
 
 license:
-========
 
 [![Licence](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 cran status:
-============
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/dr4pl)](https://cran.r-project.org/package=dr4pl)
 
