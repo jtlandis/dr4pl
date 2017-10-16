@@ -3,12 +3,10 @@
 language: R
 sudo: false
 cache: packages
-
 deploy:
   provider: releases
-  api_key: "696b11c229aa329daa317bfb1104125d42cca231"
-  file: "dr4pl_1.0.0.tar.gz"
-  skip_cleanup: true
+  api_key:
+    secure: rxlxJWY4K8IB3yTcdN88Kiv2pZoYTOqdfm19geVTGpJx09jnYwIKIp5Zwijgtq0rtzTz1HsvzZRGGXihfjLhGQenK8yr+SXkCt/Y8Z7sN8bpCGAOuyl8gkGAnISF+UIN7v4hEp2fT+RT0p6Szgv/Ibv+ciaJBGZT0n9PwfZ8J$
+  file: dr4pl_1.0.0.tar.gz
   on:
-    tags: true
-
+    repo: aubreybailey/dr4pl

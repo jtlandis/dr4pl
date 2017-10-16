@@ -7,7 +7,7 @@ all: $(PACKAGEFILE) README.md
 .PHONY: all install
 
 install:
-	R -e 'devtools::install_github("ahwbest/dr4pl")'	
+	R -e 'devtools::install_bitbucket("ahwbest/dr4pl")'	
 
 localInstall:
 	R -e 'devtools::install()'
@@ -28,4 +28,4 @@ README.md: README.Rmd R/*.R
 	
 $(PACKAGEFILE): man R/*.R DESCRIPTION inst/doc
 	sed -i "s/^Date:.*$$/Date: `date +%Y-%m-%d`/" DESCRIPTION
-	R -e 'devtools::check();devtools::build()'
+	R -e 'devtools::check(cran=TRUE);devtools::build()'
