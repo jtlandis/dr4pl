@@ -5,8 +5,8 @@ Version: 1.0.0
 Depends: R (>= 2.10)
 Author: Hyowon An
 Maintainer: Hyowon An <ahwbest@gmail.com>
-Description: Models the relationship between dose levels and responses in a pharmacological experiment using the 4 Parameter Logistic model. Currently both increasing and decreasing curves are supported. To deal with a convergence failure problem of nonlinear regression models, methods are provided to detect convergence failure as well as suggested solutions.
-License: GPL (>= 2)
+Description: Models the relationship between dose levels and responses in a pharmacological experiment using the 4 Parameter Logistic model. Seeks to solve convergence issues that current packages may not handle. To deal with a convergence failure problem of nonlinear regression models, methods are provided to detect convergence failure as well as provide the user control over estimation and optimization functions. Gadagkar, S. R. and Call, G. B. (2015) <doi:10.1016/j.vascn.2014.08.006> Ritz, C. and Baty, F. and Streibig, J. C. and Gerhard, D. (2015) <doi:10.1371/journal.pone.0146021>.
+License: GPL
 LazyData: TRUE
 URL: https://github.com/ahwbest/dr4pl
 BugReports: https://github.com/ahwbest/dr4pl/issues
