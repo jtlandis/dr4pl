@@ -55,7 +55,7 @@ plot(a)
 ```{r example_solution}
 ## basic example code
 ## example requires the dr4pl package to be loaded
-b <- dr4pl(drc_error_1$Response~drc_error_1$Dose, method.robust = "Tukey") #Tukey's Biweight loss function estimates best for this particular data set
+b <- dr4pl(drc_error_1$Response~drc_error_1$Dose, method.init = "logistic", method.robust = "Tukey") 
 plot(b)
 ```
 ```{r}

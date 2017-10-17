@@ -65,7 +65,7 @@ plot(a)
 ```r
 ## basic example code
 ## example requires the dr4pl package to be loaded
-b <- dr4pl(drc_error_1$Response~drc_error_1$Dose, method.robust = "Tukey") #Tukey's Biweight loss function estimates best for this particular data set
+b <- dr4pl(drc_error_1$Response~drc_error_1$Dose, method.init = "logistic", method.robust = "Tukey") 
 plot(b)
 #> Warning: Transformation introduced infinite values in continuous x-axis
 
@@ -76,17 +76,16 @@ plot(b)
 
 ```r
 summary(b)
-#> Warning in sqrt(diag(vcov.mat)): NaNs produced
 #> $call
 #> dr4pl.formula(formula = drc_error_1$Response ~ drc_error_1$Dose, 
-#>     method.robust = "Tukey")
+#>     method.init = "logistic", method.robust = "Tukey")
 #> 
 #> $coefficients
 #>                 Estimate         2.5 %       97.5 %
-#> UpperLimit  2.021259e+04  1.772557e+04 22699.614675
-#> IC50        6.609737e-02  4.271953e-03     1.022685
-#> Slope      -1.915344e+00           NaN          NaN
-#> LowerLimit -8.969570e+01 -1.014693e+04  9967.539552
+#> UpperLimit  7.913355e+04  6.914512e+04 8.912197e+04
+#> IC50        4.258701e-13  4.073035e-25 4.452830e-01
+#> Slope      -7.370728e-02 -1.713284e-01 2.391385e-02
+#> LowerLimit -8.393064e+03 -3.401134e+04 1.722521e+04
 #> 
 #> attr(,"class")
 #> [1] "summary.dr4pl"
