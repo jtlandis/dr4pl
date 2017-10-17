@@ -1,11 +1,11 @@
 
-#' Transform parameters of a 4PL model (theta) into re-parameterized parameters
-#' (retheta).
-#' 
-#' @param theta Parameters of a 4PL model in the dose scale.
-#' 
-#' @return Reparameterized parameters of a 4PL model among which the EC50 parameter
-#' is in the log 10 dose scale.
+# Transform parameters of a 4PL model (theta) into re-parameterized parameters
+# (retheta).
+# 
+# @param theta Parameters of a 4PL model in the dose scale.
+# 
+# @return Reparameterized parameters of a 4PL model among which the EC50 parameter
+# is in the log 10 dose scale.
 ParmToLog <- function(theta) {
 
   # Check whether function arguments are appropriate. 
@@ -26,14 +26,14 @@ ParmToLog <- function(theta) {
   return(retheta)
 }
 
-#' Transform reparameterized parameters (retheta) back into original parameters 
-#' (theta)
-#' 
-#' @param retheta Parameters of a 4PL model among which the EC50 or IC50 parameter
-#' is in the log 10 dose scale.
-#' 
-#' @return Parameters of a 4PL model among which the EC50 or IC50 parameter is in 
-#' the dose scale.
+# Transform reparameterized parameters (retheta) back into original parameters 
+# (theta)
+# 
+# @param retheta Parameters of a 4PL model among which the EC50 or IC50 parameter
+# is in the log 10 dose scale.
+# 
+# @return Parameters of a 4PL model among which the EC50 or IC50 parameter is in 
+# the dose scale.
 LogToParm <- function(retheta) {
   
   theta <- c(retheta[1], 10^(retheta[2]), retheta[3], retheta[4])
@@ -49,12 +49,13 @@ LogToParm <- function(retheta) {
   return(theta)
 }
 
-#' Compute an estimated mean response
-#'
-#' @param x Dose levels
-#' @param theta Parameters of the 4PL model
-#'
-#' @return Predicted response values.
+# Compute an estimated mean response
+#
+# @param x Dose levels
+# @param theta Parameters of the 4PL model
+#
+# @return Predicted response values.
+# 
 MeanResponse <- function(x, theta) {
 
   ### Check whether function arguments are appropriate
@@ -72,13 +73,14 @@ MeanResponse <- function(x, theta) {
   return(f)
 }
 
-#' Compute an estimated mean response with the logarithm IC50 parameter
-#'
-#' @param x Dose levels
-#' @param retheta Parameters among which the IC50 parameter is logarithmically
-#'   transformed
-#'
-#' @return Predicted response values.
+# Compute an estimated mean response with the logarithm IC50 parameter
+#
+# @param x Dose levels
+# @param retheta Parameters among which the IC50 parameter is logarithmically
+#   transformed
+#
+# @return Predicted response values.
+# 
 MeanResponseLogIC50 <- function(x, retheta) {
   
   ### Check whether function arguments are appropriate
@@ -93,29 +95,29 @@ MeanResponseLogIC50 <- function(x, retheta) {
   return(f)
 }
 
-#' Squares of residuals
-#'
-#' @param r Residuals
+# Squares of residuals
 #
-#' @return Squared residuals
+# @param r Residuals
+#
+# @return Squared residuals
 SquaredLoss <- function(r) {
   return(r^2)
 }
 
-#' Absolute values of residuals
+# Absolute values of residuals
 #
-#' @param r Residuals
+# @param r Residuals
 #
-#' @return Absolute valued residuals
+# @return Absolute valued residuals
 AbsoluteLoss <- function(r) {
 
   return(abs(r))
 }
 
-#' Values of Huber's loss function evaluated at residuals r.
+# Values of Huber's loss function evaluated at residuals r.
 #
-#' @param r Residuals
-#' @return Huber's loss function values evaluated at residuals r.
+# @param r Residuals
+# @return Huber's loss function values evaluated at residuals r.
 HuberLoss <- function(r) {
 
   # The value 1.345 was suggested by Huber (1964).
@@ -132,11 +134,11 @@ HuberLoss <- function(r) {
   return(ret.val)
 }
 
-#' Values of Tukey's biweight loss function evaluated at residuals r.
+# Values of Tukey's biweight loss function evaluated at residuals r.
 #
-#' @param r Residuals
+# @param r Residuals
 #
-#' @return result: Tukey's biweight loss function values evaluated at residuals r.
+# @return result: Tukey's biweight loss function values evaluated at residuals r.
 TukeyBiweightLoss <- function(r) {
 
   # The value 4.685 was suggested by Tukey.
@@ -149,15 +151,15 @@ TukeyBiweightLoss <- function(r) {
   return(ret.val)
 }
 
-#' Returns an loss function for given robust fitting method
+# Returns an loss function for given robust fitting method
 #
-#' @param method.robust NULL, absolute, Huber, or Tukey
-#'      - NULL: Sum of squares loss
-#'      - absolute: Absolute deviation loss
-#'      - Huber: Huber's loss
-#'      - Tukey: Tukey's biweight loss
+# @param method.robust NULL, absolute, Huber, or Tukey
+#      - NULL: Sum of squares loss
+#      - absolute: Absolute deviation loss
+#      - Huber: Huber's loss
+#      - Tukey: Tukey's biweight loss
 #
-#' @return Value of the sum of squared residuals
+# @return Value of the sum of squared residuals
 ErrFcn <- function(method.robust) {
 
   ### Check whether function arguments are appropriate.
@@ -206,12 +208,12 @@ ErrFcn <- function(method.robust) {
   return(err.fcn)
 }
 
-#' Compute the derivative values of the mean response function.
+# Compute the derivative values of the mean response function.
 #
-#' @param theta Parameters of the 4PL model
-#' @param x Dose levels
+# @param theta Parameters of the 4PL model
+# @param x Dose levels
 #
-#' @return Derivative values of the mean response function.
+# @return Derivative values of the mean response function.
 DerivativeF <- function(theta, x) {
   
   theta.1 <- theta[1]
@@ -264,14 +266,14 @@ DerivativeF <- function(theta, x) {
   return(deriv.f.theta)
 }
 
-#' Compute the derivative values of the mean response function with respect to
-#'   reparametrized parameters including the log 10 IC50 parameter.
-#'
-#' @param retheta Parameters obtained from the original parameters by
-#'   \code{retheta[2] <- log10(theta[2])}
-#' @param x Dose levels
-#'
-#' @return Derivative values of the mean response function.
+# Compute the derivative values of the mean response function with respect to
+#   reparametrized parameters including the log 10 IC50 parameter.
+#
+# @param retheta Parameters obtained from the original parameters by
+#   \code{retheta[2] <- log10(theta[2])}
+# @param x Dose levels
+#
+# @return Derivative values of the mean response function.
 DerivativeFLogIC50 <- function(retheta, x) {
 
   theta <- retheta
@@ -290,14 +292,14 @@ DerivativeFLogIC50 <- function(retheta, x) {
   return(deriv.f.retheta)
 }
 
-#' Compute gradient values of the sum-of-squares loss function.
-#'
-#' @param retheta Parameters among which the IC50 parameter is logarithmically
-#'   transformed
-#' @param x Dose
-#' @param y Response
-#'
-#' @return Gradient values of the sum-of-squares loss function.
+# Compute gradient values of the sum-of-squares loss function.
+#
+# @param retheta Parameters among which the IC50 parameter is logarithmically
+#   transformed
+# @param x Dose
+# @param y Response
+#
+# @return Gradient values of the sum-of-squares loss function.
 GradientSquaredLossLogIC50 <- function(retheta, x, y) {
 
   f <- MeanResponseLogIC50(x, retheta)  # Mean response values
@@ -306,13 +308,14 @@ GradientSquaredLossLogIC50 <- function(retheta, x, y) {
   return(-2*(y - f)%*%DerivativeFLogIC50(retheta, x)/n)
 }
 
-#' Compute the Hessian matrix of the sum-of-squares loss function
-#' 
-#' @param theta Parameters
-#' @param x Doses
-#' @param y Response
-#'
-#' @return Hessian matrix of the sum-of-squares loss function.
+# Compute the Hessian matrix of the sum-of-squares loss function
+# 
+# @param theta Parameters
+# @param x Doses
+# @param y Response
+#
+# @return Hessian matrix of the sum-of-squares loss function.
+# 
 Hessian <- function(theta, x, y) {
 
   n <- length(x)  # Number of observations
@@ -365,16 +368,17 @@ Hessian <- function(theta, x, y) {
   return(hessian)
 }
 
-#' Compute the Hessian matrix of the sum-of-squares loss function with
-#' reparameterization.
-#' 
-#' @param retheta Parameters of a 4PL model among which the EC50 parameter is
-#' in the log 10 dose scale
-#' @param x Doses
-#' @param y Response
-#'
-#' @return Hessian matrix of the sum-of-squares loss function in terms of
-#' reparameterized parameters.
+# Compute the Hessian matrix of the sum-of-squares loss function with
+# reparameterization.
+# 
+# @param retheta Parameters of a 4PL model among which the EC50 parameter is
+# in the log 10 dose scale
+# @param x Doses
+# @param y Response
+#
+# @return Hessian matrix of the sum-of-squares loss function in terms of
+# reparameterized parameters.
+# 
 HessianLogIC50 <- function(retheta, x, y) {
   
   theta <- LogToParm(retheta)  # Original parameters
@@ -390,26 +394,26 @@ HessianLogIC50 <- function(retheta, x, y) {
   return(hessian.re)
 }
 
-#' Compute residuals.
-#' 
-#' @param theta Parameters of a 4PL model
-#' @param x Vector of doses
-#' @param y Vector of responses
-#' 
-#' @return Vector of residuals
+# Compute residuals.
+# 
+# @param theta Parameters of a 4PL model
+# @param x Vector of doses
+# @param y Vector of responses
+# 
+# @return Vector of residuals
 Residual <- function(theta, x, y) {
   
   return(y - MeanResponse(x, theta))
 }
 
-#' Compute residuals with a reparameterized model.
-#' 
-#' @param retheta Parameters of a 4pl model among which the IC50 parameter is
-#' transformed into a log 10 scale.
-#' @param x Vector of doses
-#' @param y Vector of responses
-#' 
-#' @return Vector of residuals
+# Compute residuals with a reparameterized model.
+# 
+# @param retheta Parameters of a 4pl model among which the IC50 parameter is
+# transformed into a log 10 scale.
+# @param x Vector of doses
+# @param y Vector of responses
+# 
+# @return Vector of residuals
 ResidualLogIC50 <- function(retheta, x, y) {
   
   
