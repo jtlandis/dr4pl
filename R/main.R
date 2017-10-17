@@ -36,8 +36,8 @@ dr4pl <- function(...) UseMethod("dr4pl")
 #' while the option "increasing" will impose a restriction \eqn{\theta[3]>=0} in an 
 #' optimization process.
 #' @param method.init Method of obtaining initial values of the parameters.
-#' If it is NULL, a default "Mead" method will be used. Assign
-#' "logistic" to use the logistic method.
+#' If this parameter is left unassigned, a default "Mead" method will be used.
+#' Assign "logistic" to use the logistic method.
 #' @param method.optim Method of optimization of the loss function specified by
 #' \code{method.robust}. This function argument is directly passed to the function
 #' \code{\link[stats]{constrOptim}} which is provided in the \pkg{base} package of R.
@@ -124,12 +124,13 @@ dr4pl.formula <- function(formula,
 #' @param response Vector of responses
 #'
 #' @examples 
+#'   ##Assign method.init = "logistic" to use logistic method of estimation.
 #'   a <- dr4pl(dose = sample_data_1$Dose, 
 #'                response = sample_data_1$Response, 
 #'                method.init = "logistic")
 #'   plot(a)
 #'
-#'   ##Assign method.init = "Mead" to use Mead's method of estimation. 
+#'   ##Use default or Assign method.init = "Mead" to use Mead's method of estimation.
 #'   # Use method.robust to select desired loss function
 #'   b <- dr4pl(Response~Dose, 
 #'                data = sample_data_4,
@@ -138,13 +139,13 @@ dr4pl.formula <- function(formula,
 #'   plot(b)
 #' 
 #'   ##compatable with ggplot
-#'   library(ggplot2)
+#'   library(ggplot2) #load ggplot2
 #'   c <- dr4pl(Response~Dose, 
-#'              data = drc_error_2,
-#'              method.init = "Mead", 
-#'              method.robust = "absolute" )
-#'   d <- plot(c)
-#'   d + scale_x_log10(breaks = c(.00135, .0135, .135, 1.35, 13.5))
+#'           data = drc_error_2, 
+#'           method.optim = "CG", 
+#'           trend = "decreasing" )
+#'   d <- plot(c, x.breaks = c(.00135, .0135, .135, 1.35, 13.5))
+#'   d + theme_grey()
 #' @export
 dr4pl.default <- function(dose,
                           response,
