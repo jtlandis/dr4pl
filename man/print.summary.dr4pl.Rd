@@ -14,3 +14,10 @@
 \description{
 Print the dr4pl object summary to screen.
 }
+\examples{
+ryegrass.dr4pl <- dr4pl(rootl ~ conc, data = ryegrass)
+print(summary(ryegrass.dr4pl))
+
+obj.dr4pl <- dr4pl(Response ~ Dose, data = sample_data_7)
+print(summary(obj.dr4pl))
+}
