@@ -3,10 +3,17 @@
 language: R
 sudo: false
 cache: packages
+before_deploy:
+  - export RELEASE_PKG_FILE=$(ls dr4pl*.tar.gz)
+  - echo "deploying $RELEASE_PKG_FILE to GitHub releases"
 deploy:
+  skip_cleanup: true
   provider: releases
   api_key:
-    secure: rxlxJWY4K8IB3yTcdN88Kiv2pZoYTOqdfm19geVTGpJx09jnYwIKIp5Zwijgtq0rtzTz1HsvzZRGGXihfjLhGQenK8yr+SXkCt/Y8Z7sN8bpCGAOuyl8gkGAnISF+UIN7v4hEp2fT+RT0p6Szgv/Ibv+ciaJBGZT0n9PwfZ8J$
-  file: dr4pl_1.0.0.tar.gz
+    secure: s1WLsnELRaiWD7Lf+MkDC1cer6iEs/yqc5IfiUtcaueLxdHdIMbC4ZPm7lfFc5idWK6fZoBkett4fO/8NI2BAqJjtUycMLDWNfFzux6KcnscR/GVtLe5v969oo8QPVy69X+uWEo3liVymTPUKz4jDjGRIuOEQ7ML5dAoBMvBdBUZyKvBhCKladZVqpMec6zzBrOQxrTECWa7wveupZxxD9rtwM5FP2vRFoAw6V6nKrPsI1I6aO2znelNpTyHOCJaZ0pvnSxgW2ZJkwozYAz8vUohGe+LiNnFWSeyqFqNZsibLqV0e9Mj122lvbgLpK2M4fcDVA63ORGEfOKO02qsHJnx9ZxRVT+J4qNQ6YKcocpEd3bKsRvSglUfdZSSJaXyvOSY2uxgQVTOszAQCIkaihNRDMD7oXPSskGoYPQB/2dYgkZqWR8r5KPx8Oh2MfU69Gbl1p5KWBrLpJUcwx8yCNxkrxCJFlHjUbLZa5Z0LGpRQ1JvCtI5EPBdiyT+6uhR/MHjwx7u3+bPZ+W8PtyeMwTujo9RCjQAjCqhTQU9egnt5RfPEMgiYl39142+xl4HR1WKNLM0okrkcZ6Z0MRsWxTot1dKl+DDBzqv1de/6Rd0nIKKNCDWH2ro1lUJxvf+gIsWqDPDmlEkgEr/YqO6Ofpp2iksIAv8dA3qUuUF0co=
+  file_glob: true
+  file: "${RELEASE_PKG_FILE}"
   on:
     repo: aubreybailey/dr4pl
+    tags: true
+    branch: releases

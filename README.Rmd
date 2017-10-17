@@ -4,13 +4,10 @@ output:
     variant: markdown_github
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
+  comment = "#>"
 )
 ```
 #build status:
@@ -27,7 +24,7 @@ knitr::opts_chunk$set(
 
 #release version:
 
-[![packageversion](https://img.shields.io/badge/GitHub%20Package%20version-0.97-orange.svg?style=flat-square)](commits/master)
+[![packageversion](https://img.shields.io/badge/GitHub%20Package%20version-1.0.0-orange.svg?style=flat-square)](commits/master)
 
 ##dr4pl
 
@@ -39,7 +36,7 @@ You can install dr4pl from github with:
 
 ```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("ahwbest/dr4pl")
+devtools::install_bitbucket("dittmerlab/dr4pl")
 ```
 
 ## Example
