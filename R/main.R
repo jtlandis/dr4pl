@@ -8,6 +8,7 @@
 #' @import ggplot2
 #' @import tensor
 #' @import Rdpack
+#' @importFrom Matrix nearPD
 NULL
 #' @title Fitting 4 Parameter Logistic (4PL) models to dose-response data.
 #' 

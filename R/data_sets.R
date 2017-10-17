@@ -4,6 +4,9 @@
 #' @name sample_data_1
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_1)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
@@ -11,6 +14,9 @@ NULL
 #' @name sample_data_2
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_2)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
@@ -18,6 +24,9 @@ NULL
 #' @name sample_data_3
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_3)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
@@ -25,6 +34,9 @@ NULL
 #' @name sample_data_4
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_4)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
@@ -32,6 +44,9 @@ NULL
 #' @name sample_data_5
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_5)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
@@ -39,6 +54,9 @@ NULL
 #' @name sample_data_6
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_6)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
@@ -46,6 +64,9 @@ NULL
 #' @name sample_data_7
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_7)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
@@ -53,6 +74,9 @@ NULL
 #' @name sample_data_8
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_8)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
@@ -60,6 +84,9 @@ NULL
 #' @name sample_data_9
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_9)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
@@ -67,6 +94,9 @@ NULL
 #' @name sample_data_10
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_10)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
@@ -74,6 +104,9 @@ NULL
 #' @name sample_data_11
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_11)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
@@ -81,6 +114,9 @@ NULL
 #' @name sample_data_12
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_12)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
@@ -88,6 +124,9 @@ NULL
 #' @name sample_data_13
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = sample_data_13)
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These all have numerical errors in other dose-response curve-packages, but not using these methods.
@@ -96,6 +135,9 @@ NULL
 #' @name drc_error_1
 #' @docType data
 #' @keywords sample_data
+#' @examples 
+#'   a <- dr4pl(Response~Dose, data = drc_error_1, method.init = "logistic", method.robust = "Tukey")
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These all have numerical errors in other dose-response curve-packages, but not using these methods.
@@ -104,6 +146,9 @@ NULL
 #' @name drc_error_2
 #' @docType data
 #' @keywords sample_data
+#' @examples 
+#'   a <- dr4pl(Response~Dose, data = drc_error_2, trend = "decreasing", method.optim = "CG")
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These all have numerical errors in other dose-response curve-packages, but not using these methods.
@@ -112,6 +157,9 @@ NULL
 #' @name drc_error_3
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = drc_error_3, method.init = "Mead", method.robust = "Huber")
+#'   plot(a)
 NULL
 #' These are a handful of experimentally derived datasets from the wet-laboratory.
 #' These all have numerical errors in other dose-response curve-packages, but not using these methods.
@@ -120,4 +168,7 @@ NULL
 #' @name drc_error_4
 #' @docType data
 #' @keywords sample_data
+#' @examples
+#'   a <- dr4pl(Response~Dose, data = drc_error_4, method.init = "logistic")
+#'   plot(a)
 NULL

@@ -8,4 +8,8 @@
 These are a handful of experimentally derived datasets from the wet-laboratory.
 These may or may not have numerical errors in other dose-response curve-packages, but definitly not using these methods.
 }
+\examples{
+  a <- dr4pl(Response~Dose, data = sample_data_2)
+  plot(a)
+}
 \keyword{sample_data}

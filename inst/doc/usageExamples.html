@@ -242,18 +242,18 @@ b</code></pre></div>
 <p>Once you produce a curve you feel is representative of your data, you may get the parameters of the curve by using the summary function on the dr4pl variable.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">b &lt;-<span class="st"> </span><span class="kw">summary</span>(a)
 b$coefficients</code></pre></div>
-<pre><code>##                 Estimate         2.5 %        97.5 %
-## UpperLimit 59858.0700193 57577.5738944 62138.5661443
-## IC50           5.0794918     3.6025829     7.1618719
-## Slope         -0.6117371    -0.7570376    -0.4664367
-## LowerLimit   980.8205686 -1761.6368987  3723.2780359</code></pre>
+<pre><code>##             Estimate     2.5 %    97.5 %
+## UpperLimit 59858.070 57577.574 62138.566
+## IC50           5.079     3.603     7.162
+## Slope         -0.612    -0.757    -0.466
+## LowerLimit   980.821 -1761.637  3723.278</code></pre>
 <p>It is possible that you are interested in more than just the IC50 variable. Use the IC() function to produce the respective Dose values.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">values &lt;-<span class="st"> </span><span class="kw">IC</span>(a, <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">70</span>, <span class="dv">90</span>))
 values</code></pre></div>
 <pre><code>## InhibPercent:10 InhibPercent:30 InhibPercent:50 InhibPercent:70 
-##     184.3784198      20.2930770       5.0794918       1.2714305 
+##          184.38           20.29            5.08            1.27 
 ## InhibPercent:90 
-##       0.1399363</code></pre>
+##            0.14</code></pre>
 <p>You may then easily edit your plot further with basic ggplot2 additional controls.</p>
 <p>You may use dr4pl on increasing and decreasing curves. Lets see how dr4pl handles the drc data set <strong>chekcweed0</strong>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a &lt;-<span class="st"> </span><span class="kw">dr4pl</span>(count~time, <span class="dt">data =</span> chickweed0, <span class="dt">trend =</span> <span class="st">&quot;increasing&quot;</span>)

@@ -40,8 +40,8 @@ while the option "increasing" will impose a restriction \eqn{\theta[3]>=0} in an
 optimization process.}
 
 \item{method.init}{Method of obtaining initial values of the parameters.
-If it is NULL, a default "Mead" method will be used. Assign
-"logistic" to use the logistic method.}
+If this parameter is left unassigned, a default "Mead" method will be used.
+Assign "logistic" to use the logistic method.}
 
 \item{method.robust}{Parameter to select loss function for the robust estimation 
 method to be used to fit a model. The argument NULL indicates the sum of squares
@@ -109,12 +109,13 @@ response variable
 }}
 
 \examples{
+  ##Assign method.init = "logistic" to use logistic method of estimation.
   a <- dr4pl(dose = sample_data_1$Dose, 
                response = sample_data_1$Response, 
                method.init = "logistic")
   plot(a)
 
-  ##Assign method.init = "Mead" to use Mead's method of estimation. 
+  ##Use default or Assign method.init = "Mead" to use Mead's method of estimation.
   # Use method.robust to select desired loss function
   b <- dr4pl(Response~Dose, 
                data = sample_data_4,
@@ -123,13 +124,13 @@ response variable
   plot(b)
 
   ##compatable with ggplot
-  library(ggplot2)
+  library(ggplot2) #load ggplot2
   c <- dr4pl(Response~Dose, 
-             data = drc_error_2,
-             method.init = "Mead", 
-             method.robust = "absolute" )
-  d <- plot(c)
-  d + scale_x_log10(breaks = c(.00135, .0135, .135, 1.35, 13.5))
+          data = drc_error_2, 
+          method.optim = "CG", 
+          trend = "decreasing" )
+  d <- plot(c, x.breaks = c(.00135, .0135, .135, 1.35, 13.5))
+  d + theme_grey()
 }
 \seealso{
 \code{\link{confint.dr4pl}}, \code{\link{gof.dr4pl}},
