@@ -9,4 +9,8 @@ These are a handful of experimentally derived datasets from the wet-laboratory.
 These all have numerical errors in other dose-response curve-packages, but not using these methods.
 This data set exemplifies the case of multiple outliers at a single dose measurement as well as the support problem.
 }
+\examples{
+  a <- dr4pl(Response~Dose, data = drc_error_3, method.init = "Mead", method.robust = "Huber")
+  plot(a)
+}
 \keyword{sample_data}
