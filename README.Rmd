@@ -36,7 +36,7 @@ You can install dr4pl from github with:
 
 ```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("ahwbest/dr4pl")
+devtools::install_bitbucket("dittmerlab/dr4pl")
 ```
 
 ## Example
