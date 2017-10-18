@@ -13,17 +13,17 @@ pipelines:
           - R -e 'devtools::install_deps(".", dependencies=TRUE, upgrade=FALSE)'
           - R -e 'devtools::build()'
           - R -e 'devtools::install(upgrade_dependencies = FALSE)'
-          - R -e 'devtools::check(cran=TRUE)'
-          - R -e 'devtools::install_bitbucket("dittmerlab/dr4pl")'
-          - R -e 'devtools::install()'
-          - man:
-            - R -e 'devtools::document()'
-            - touch man
-          - inst/doc: vignettes/*.Rnw R/*.R
-          - script:
-            - R -e 'devtools::build_vignettes()'
-            - touch inst/doc inst/image
-            - README.md: README.Rmd R/*.R
-            - make localInstall
-            - R -e 'knitr::opts_chunk$$set(fig.path="inst/image/");knitr::knit("README.Rmd")'
-            - sed '/^---$$/,/^---$$/d' README.md --in-place
+          #- R -e 'devtools::check(cran=TRUE)'
+          #- R -e 'devtools::install_bitbucket("dittmerlab/dr4pl")'
+          #- R -e 'devtools::install()'
+          #- man:
+          #  - R -e 'devtools::document()'
+          #  - touch man
+          #- inst/doc: vignettes/*.Rnw R/*.R
+          #- script:
+          #  - R -e 'devtools::build_vignettes()'
+          #  - touch inst/doc inst/image
+          #  - README.md: README.Rmd R/*.R
+          #  - make localInstall
+          #  - R -e 'knitr::opts_chunk$$set(fig.path="inst/image/");knitr::knit("README.Rmd")'
+          #  - sed '/^---$$/,/^---$$/d' README.md --in-place
