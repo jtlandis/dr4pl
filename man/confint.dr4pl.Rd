@@ -4,7 +4,7 @@
 \alias{confint.dr4pl}
 \title{Fit a 4 parameter logistic (4PL) model to dose-response data.}
 \usage{
-\method{confint}{dr4pl}(object, parm, level = 0.95, ...)
+\method{confint}{dr4pl}(object, parm = NULL, level = 0.95, ...)
 }
 \arguments{
 \item{object}{An object of the dr4pl class}
@@ -21,20 +21,25 @@ A matrix of the confidence intervals in which each row represents a
   confidence intervals of the corresponding parameters.
 }
 \description{
-Compute the confidence intervals of parameter estimates of a fitted
-  model.
+Compute the approximate confidence intervals of the parameters of a 
+4PL model based on the asymptotic normality of least squares estimators.
 }
 \details{
-This function computes the confidence intervals of the parameters of the
-  4PL model based on the second order approximation to the Hessian matrix of the
-  loss function of the model. Please refer to Subsection 5.2.2 of 
-  Seber and Wild (1989).
+This function computes the approximate confidence intervals of the
+true parameters of a 4PL model based on the asymptotic normality of the least
+squares estimators in nonlinear regression. The Hessian matrix is used to
+obtain the second order approximation to the sum-of-squares loss function.
+Please refer to Subsection 5.2.2 of Seber and Wild (1989).
 }
 \examples{
-  obj.dr4pl <- dr4pl(Response ~ Dose, data = sample_data_1)
-  parm <- obj.dr4pl$parameters
+obj.dr4pl <- dr4pl(Response ~ Dose, data = sample_data_1)  # Fit a 4PL model to data
 
-  confint(obj.dr4pl, parm = parm, level = 0.95)
+confint(obj.dr4pl)  # Print conventional 95\% confidence intervals
+confint(obj.dr4pl, level = 0.99)  # Print 99\%confidence intervals
+
+theta <- coef(obj.dr4pl)
+theta[4] <- 0  # Set the lower asymptote to be zero
+confint(obj.dr4pl, parm = theta)  # Use our dr4pl object but different parameter estimates
 
 }
 \references{

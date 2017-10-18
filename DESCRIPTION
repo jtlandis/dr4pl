@@ -11,7 +11,7 @@ Description: Models the relationship between dose levels and responses in a phar
 License: GPL (>= 2)
 LazyData: TRUE
 URL: https://github.com/ahwbest/dr4pl
-BugReports: https://github.com/ahwbest/dr4pl/issues
+BugReports: https://bitbucket.org/dittmerlab/dr4pl/issues?status=new&status=open
 RdMacros: Rdpack
 RoxygenNote: 6.0.1
 Imports:
