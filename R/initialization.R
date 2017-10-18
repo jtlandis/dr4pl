@@ -1,8 +1,6 @@
 
 # Compute the Hill bounds based on initial parameter estimates and data.
 # 
-# 
-# 
 # @param x Vector of doses.
 # @param y Vector of responses.
 # @param theta Parameters of a 4PL model.
