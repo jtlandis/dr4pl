@@ -45,6 +45,7 @@ ryegrass.dr4pl <- dr4pl::dr4pl(Response ~ Dose, data = sample_data_1)
 plot(ryegrass.dr4pl)
 
 ##Able to further edit plots
+library(ggplot2) #needed to change color to green
 ryegrass.dr4pl <- dr4pl::dr4pl(Response ~ Dose, 
                                data = sample_data_1, 
                                text.title = "Sample Data Plot")
@@ -68,6 +69,7 @@ plot(ryegrass.dr4pl, text.title = "My New Dose Response plot")
 
 ##Change the labels of the x and y axis to your need
 
+library(drc) #needed to load 'decontaminants' data set
 d <- subset(decontaminants, group \%in\% "hpc")
 e <- dr4pl(count~conc, data = d)
 plot(e, 

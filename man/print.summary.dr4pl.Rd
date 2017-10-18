@@ -15,6 +15,7 @@
 Print the dr4pl object summary to screen.
 }
 \examples{
+library(drc) #needed for ryegrass data set
 ryegrass.dr4pl <- dr4pl(rootl ~ conc, data = ryegrass)
 print(summary(ryegrass.dr4pl))
 
