@@ -14,7 +14,7 @@ pipelines:
           - R -e 'devtools::build()'
           - R -e 'devtools::install(upgrade_dependencies = FALSE)'
           - R -e 'devtools::check(cran=TRUE)'
-          - R -e 'devtools::install_bitbucket("dittmerlab/dr4pl")'	
+          - R -e 'devtools::install_bitbucket("dittmerlab/dr4pl")'
           - R -e 'devtools::install()'
           - man:
             - R -e 'devtools::document()'
