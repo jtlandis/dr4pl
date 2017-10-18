@@ -9,3 +9,4 @@ README.html
 .Ruserdata
 /revdep/.cache.rds
 man/*
+*.Rproj
