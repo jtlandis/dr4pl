@@ -25,7 +25,7 @@ inst/doc: vignettes/*.Rnw R/*.R
 
 README.md: README.Rmd R/*.R
 	make localInstall
-	R -e 'knitr::opts_chunk$$set(fig.path="inst/image/");knitr::knit("README.Rmd")'
+	R -e 'knitr::opts_chunk$set(fig.path="inst/image/");knitr::knit("README.Rmd")'
 	sed '/^---$$/,/^---$$/d' README.md --in-place
 	
 $(PACKAGEFILE): man R/*.R DESCRIPTION inst/doc
