@@ -9,7 +9,7 @@ all: $(PACKAGEFILE) README.md
 .PHONY: all install
 
 install:
-	R -e 'devtools::install_bitbucket("ahwbest/dr4pl")'	
+	R -e 'devtools::install_bitbucket("dittmerlab/dr4pl")'	
 
 localInstall:
 	R -e 'devtools::install()'
