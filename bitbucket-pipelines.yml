@@ -16,7 +16,7 @@
            - R -e 'devtools::check(cran=TRUE)'
            - R -e 'devtools::install_bitbucket("dittmerlab/dr4pl")'
            - R -e 'devtools::install()'
-           - R -e 'knitr::opts_chunk$$set(fig.path="inst/image/");knitr::knit("README.Rmd")' 
+           - R -e 'knitr::opts_chunk$set(fig.path="inst/image/");knitr::knit("README.Rmd")' 
  definitions:
   caches:
     rdeps: R -e 'devtools::install_deps(".", dependencies=TRUE, upgrade=FALSE)'
