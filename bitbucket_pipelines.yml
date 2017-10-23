@@ -1,0 +1,34 @@
+ # Only use spaces to indent your .yml configuration.
+ # -----
+ # You can specify a custom docker image from Docker Hub as your build environment.
+ image: rocker/hadleyverse:latest
+ 
+ pipelines:
+   default:
+     - step:
+         caches:
+           - rdeps
+         script:
+           - cd /opt/atlassian/pipelines/agent/build
+           - R -e 'devtools::install_deps(".", dependencies=TRUE, upgrade=FALSE)'
+           - R -e 'devtools::build()'
+           - R -e 'devtools::install(upgrade_dependencies = FALSE)'
+           - R -e 'devtools::check(cran=TRUE)'
+           - R -e 'devtools::install_bitbucket("dittmerlab/dr4pl")'
+           - R -e 'devtools::install()'
+           - R -e 'knitr::opts_chunk$$set(fig.path="inst/image/");knitr::knit("README.Rmd")' 
+definitions:
+  caches:
+    rdeps:
+      - R -e 'devtools::install_deps(".", dependencies=TRUE, upgrade=FALSE)'
+#- man:
+#  - R -e 'devtools::document()'
+#  - touch man
+#- inst/doc: vignettes/*.Rnw R/*.R
+#- script:
+#  - R -e 'devtools::build_vignettes()'
+#  - touch inst/doc inst/image
+#  - README.md: README.Rmd R/*.R
+#  - make localInstall
+#  - R -e 'knitr::opts_chunk$$set(fig.path="inst/image/");knitr::knit("README.Rmd")'
+#  - sed '/^---$$/,/^---$$/d' README.md --in-place
