@@ -17,10 +17,9 @@
            - R -e 'devtools::install_bitbucket("dittmerlab/dr4pl")'
            - R -e 'devtools::install()'
            - R -e 'knitr::opts_chunk$$set(fig.path="inst/image/");knitr::knit("README.Rmd")' 
-definitions:
+ definitions:
   caches:
-    rdeps:
-      - R -e 'devtools::install_deps(".", dependencies=TRUE, upgrade=FALSE)'
+    rdeps: R -e 'devtools::install_deps(".", dependencies=TRUE, upgrade=FALSE)'
 #- man:
 #  - R -e 'devtools::document()'
 #  - touch man
