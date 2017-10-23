@@ -1,7 +1,7 @@
  # Only use spaces to indent your .yml configuration.
  # -----
  # You can specify a custom docker image from Docker Hub as your build environment.
- image: zamora/r-devtools:latest
+ image: rocker/ropensci:latest
  
  pipelines:
    default:
@@ -13,7 +13,8 @@
            - ./makefile
  definitions:
   caches:
-    rdeps: R -e 'devtools::install_deps(".", dependencies=TRUE, upgrade=FALSE)'
+    rdeps: /usr/local/lib/R/site-library
+# R -e 'devtools::install_deps(".", dependencies=TRUE, upgrade=FALSE)'
 #- man:
 #  - R -e 'devtools::document()'
 #  - touch man
