@@ -282,6 +282,7 @@ IC <- function(object, inhib.percent) {
 #' plot(ryegrass.dr4pl)
 #' 
 #' ##Able to further edit plots
+#' library(ggplot2) #needed to change color to green
 #' ryegrass.dr4pl <- dr4pl::dr4pl(Response ~ Dose, 
 #'                                data = sample_data_1, 
 #'                                text.title = "Sample Data Plot")
@@ -305,6 +306,7 @@ IC <- function(object, inhib.percent) {
 #' 
 #' ##Change the labels of the x and y axis to your need
 #' 
+#' library(drc) #needed to load 'decontaminants' data set
 #' d <- subset(decontaminants, group %in% "hpc")
 #' e <- dr4pl(count~conc, data = d)
 #' plot(e, 
@@ -387,7 +389,7 @@ plot.dr4pl <- function(x,
   }
   
   a <- a + ggplot2::theme_bw()
-  
+  # Test
   # Set parameters for the titles and text / margin(top, right, bottom, left)
   a <- a + ggplot2::theme(plot.title = ggplot2::element_text(size = 20, margin = ggplot2::margin(0, 0, 10, 0)))
   a <- a + ggplot2::theme(axis.title.x = ggplot2::element_text(size = 16, margin = ggplot2::margin(15, 0, 0, 0)))
@@ -425,6 +427,7 @@ print.dr4pl <- function(object, ...) {
 #' @param ... all normally printable arguments
 #' 
 #' @examples
+#' library(drc) #needed for ryegrass data set
 #' ryegrass.dr4pl <- dr4pl(rootl ~ conc, data = ryegrass)
 #' print(summary(ryegrass.dr4pl))
 #' 
@@ -451,6 +454,7 @@ print.summary.dr4pl <- function(object, ...) {
 #' @name vcov.dr4pl
 #'   
 #' @param object An object of the dr4pl class
+#' @param ... additional arguments that are not yet supported for dr4pl objects
 #' 
 #' @return The variance-covariance matrix of the parameter estimators of a 4PL
 #' model whose columns are in the order of the upper asymptote, IC50, slope and lower
@@ -473,7 +477,7 @@ print.summary.dr4pl <- function(object, ...) {
 #' \insertRef{Seber1989}{dr4pl}
 #' 
 #' @export
-vcov.dr4pl <- function(object) {
+vcov.dr4pl <- function(object, ...) {
   
   x <- object$data$Dose
   y <- object$data$Response

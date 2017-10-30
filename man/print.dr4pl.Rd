@@ -4,7 +4,7 @@
 \alias{print.dr4pl}
 \title{Print the dr4pl object to screen.}
 \usage{
-\method{print}{dr4pl}(object, ...)
+print.dr4pl(object, ...)
 }
 \arguments{
 \item{object}{a dr4pl object to be printed}
@@ -16,7 +16,9 @@ Print the dr4pl object to screen.
 }
 \examples{
 ryegrass.dr4pl <- dr4pl(Response ~ Dose,
-                      data = sample_data_1)
-
+                        data = sample_data_1)
 print(ryegrass.dr4pl)
+
+obj.dr4pl <- dr4pl(Response ~ Dose, data = sample_data_5)
+print(obj.dr4pl)
 }
