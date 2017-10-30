@@ -4,7 +4,7 @@
 \alias{summary.dr4pl}
 \title{summary}
 \usage{
-\method{summary}{dr4pl}(object, ...)
+summary.dr4pl(object, ...)
 }
 \arguments{
 \item{object}{a dr4pl object to be summarized}
