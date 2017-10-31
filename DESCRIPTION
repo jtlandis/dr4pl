@@ -19,6 +19,7 @@ Imports:
     devtools,
     drc,
     Matrix,
+    matrixcalc,
     Rdpack,
     testthat,
     tensor

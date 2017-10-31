@@ -7,7 +7,7 @@
 #' @name confint.dr4pl
 #'   
 #' @param object An object of the dr4pl class
-#' @param parm Parameters of the 4PL model
+#' @param parm Parameters of a 4PL model
 #' @param level Confidence level
 #' @param ... Other parameters to be passed
 #' 
@@ -24,12 +24,15 @@
 #' @examples
 #' obj.dr4pl <- dr4pl(Response ~ Dose, data = sample_data_1)  # Fit a 4PL model to data
 #'
-#' confint(obj.dr4pl)  # Print conventional 95% confidence intervals
-#' confint(obj.dr4pl, level = 0.99)  # Print 99%confidence intervals
+#' ## Use the data 'sample_data_1' to obtain confidence intervals.
+#' confint(obj.dr4pl)  # 95% confidence intervals
+#' confint(obj.dr4pl, level = 0.99)  # 99% confidence intervals
 #' 
-#' theta <- coef(obj.dr4pl)
-#' theta[4] <- 0  # Set the lower asymptote to be zero
-#' confint(obj.dr4pl, parm = theta)  # Use our dr4pl object but different parameter estimates
+#' theta <- FindInitialParms(x = sample_data_1$Dose, y = sample_data_1$Response)
+#' 
+#' # Use the same data 'sample_data_1' but different parameter estimates to obtain
+#' # confidence intervals.
+#' confint(obj.dr4pl, parm = theta)
 #' 
 #' @references
 #' \insertRef{Seber1989}{dr4pl}
@@ -47,7 +50,7 @@ confint.dr4pl <- function(object, parm = NULL, level = 0.95, ...) {
     retheta <- ParmToLog(object$parameters)
   } else if(length(parm)!=4||parm[2]<=0) {
     
-    stop("Input parameter estimates should be of length 4 and the IC50 estimate
+    stop("The input argument \"parm\" should be of length 4 and the IC50 estimate
          should be nonnegative.")
   } else {
     
@@ -60,26 +63,8 @@ confint.dr4pl <- function(object, parm = NULL, level = 0.95, ...) {
   f <- MeanResponseLogIC50(x, retheta)
   
   ind.mat.inv <- TRUE  # TRUE if matrix inversion is successful, FALSE otherwise
-  vcov.mat <- try(solve(C.hat), silent = TRUE)  # Inverse matrix
   
-  # If matrix inversion is infeasible, proceed with the Cholesky decomposition.
-  if(inherits(vcov.mat, "try-error")) {
-    
-    vcov.Chol <- try(chol(C.hat, silent = TRUE))  # Cholesky decomposition
-    
-    # If the Cholesky decomposition is infeasible, use an approximated positve
-    # definite Hessian matrix to obtain the variance-covariance matrix.
-    if(inherits(vcov.Chol, "try-error")) {
-      
-      ind.mat.inv <- FALSE
-      C.hat.pd <- nearPD(C.hat)$mat/2
-      vcov.mat <- solve(C.hat.pd)
-      
-    } else {
-      
-      vcov.mat <- chol2inv(vcov.Chol)
-    }
-  }
+  vcov.mat <- vcov(object, parm)  # Variance-covariance matrix
   
   if(!ind.mat.inv) {
     
@@ -138,7 +123,7 @@ coef.dr4pl <- function(object, ...) {
 #' @description Perform the goodness-of-fit (gof) test for the 4PL model when there
 #'   are at least two replicates for each dose level.
 #'   
-#' @name gof.dr4pl
+#' @name gof
 #'   
 #' @param object An object of the dr4pl class.
 #' 
@@ -152,10 +137,14 @@ coef.dr4pl <- function(object, ...) {
 #'   detailed explanation of the method, please refer to Subsection 2.1.5 of
 #'   Seber and Wild (1989).
 #'
+#' @examples
+#' obj.dr4pl <- dr4pl(Response ~ Dose, data = sample_data_4)  # Fit a 4PL model to data
+#' gof(obj.dr4pl)  # Print the goodness-of-fit test results
+#'
 #' @references \insertRef{Seber1989}{dr4pl}
 #'
 #' @export
-gof.dr4pl <- function(object) {
+gof <- function(object) {
   
   x <- object$data$Dose  # Dose levels
   y <- object$data$Response  # Responses
@@ -185,17 +174,20 @@ gof.dr4pl <- function(object) {
   indices.x.sorted <- sort(x, index.return = TRUE)$ix
   y.sorted <- y[indices.x.sorted]
   
+  # Average response values for different dose levels
   y.bar <- tapply(X = y.sorted, INDEX = x.sorted, FUN = mean)
+  # Fitted response values
   y.fitted <- MeanResponse(levels.x.sorted, object$parameters)
-  
   
   y.bar.rep <- rep(y.bar, times = n.obs.per.dose)
   
+  # Sum of squares due to regression
   gof.numer <- J.i%*%(y.bar - y.fitted)^2/(n - p)
+  # Sum of squares due to errors
   gof.denom <- sum((y.sorted - y.bar.rep)^2)/(N - n)
   
   gof.stat <- gof.numer/gof.denom
-  gof.pval <- pf(gof.stat, df1 = n - p, df2 = N - n, lower.tail = FALSE)
+  gof.pval <- pf(gof.stat, df1 = n - p, df2 = N - n, lower.tail = FALSE)  # p-value
   gof.df <- c(n - p, N - n)
   
   obj.gof.dr4pl <- list(gof.stat, gof.pval, gof.df)
@@ -276,6 +268,7 @@ IC <- function(object, inhib.percent) {
 #' @param breaks.x Vector of desired break points for the x-axis
 #' @param breaks.y Vector of desired break points for the y-axis
 #' @param ... All arguments that can normally be passed to ggplot.
+#' 
 #' @examples
 #' ryegrass.dr4pl <- dr4pl::dr4pl(Response ~ Dose, data = sample_data_1)
 #'
@@ -314,7 +307,9 @@ IC <- function(object, inhib.percent) {
 #'      text.x = "Concentration", 
 #'      text.y = "Count")
 #' 
-#' @author Hyowon An, Justin T. Landis and Aubrey G. Bailey
+#' @author Hyowon An, \email{ahwbest@gmail.com}
+#' @author Justin T. Landis, \email{jtlandis314@gmail.com}
+#' @author Aubrey G. Bailey, \email{aubreybailey@gmail.com}
 #' 
 #' @export
 plot.dr4pl <- function(x,
@@ -454,7 +449,7 @@ print.summary.dr4pl <- function(object, ...) {
 #' @name vcov.dr4pl
 #'   
 #' @param object An object of the dr4pl class
-#' @param ... additional arguments that are not yet supported for dr4pl objects
+#' @param parm Parameters of a 4PL model
 #' 
 #' @return The variance-covariance matrix of the parameter estimators of a 4PL
 #' model whose columns are in the order of the upper asymptote, IC50, slope and lower
@@ -477,13 +472,35 @@ print.summary.dr4pl <- function(object, ...) {
 #' \insertRef{Seber1989}{dr4pl}
 #' 
 #' @export
-vcov.dr4pl <- function(object, ...) {
+vcov.dr4pl <- function(object, parm = NULL, ...) {
   
-  x <- object$data$Dose
-  y <- object$data$Response
-  retheta <- ParmToLog(object$parameters)
-
+  x <- object$data$Dose  # Vector of dose levels
+  y <- object$data$Response  # Vector of responses
+  
+  # If parameter estimates are not provided by a user, then proceed with the
+  # estimates stored in the input dr4pl object.
+  if(is.null(parm)) {
+    
+    retheta <- ParmToLog(object$parameters)
+  } else if(length(parm)!=4||parm[2]<=0) {
+    
+    stop("The input argument \"parm\" should be of length 4 and the IC50 estimate
+         should be nonnegative.")
+  } else {
+    
+    retheta <- ParmToLog(parm)
+  }
+  
   C.hat <- HessianLogIC50(retheta, x, y)/2  # Estimated variance-covariance matrix
+  
+  # If the Hessian matrix is not positive definite, use
+  if(!is.positive.semi.definite(C.hat)) {
+    
+    Jacobian <- DerivativeFLogIC50(retheta, x)
+    C.hat <- t(Jacobian)%*%Jacobian
+  }
+  
+  C.hat <- Matrix::nearPD(C.hat)$mat
   
   n <- object$sample.size  # Number of observations in data
   f <- MeanResponseLogIC50(x, retheta)
@@ -503,7 +520,6 @@ vcov.dr4pl <- function(object, ...) {
       ind.mat.inv <- FALSE
       C.hat.pd <- nearPD(C.hat)$mat/2
       vcov.mat <- solve(C.hat.pd)
-      
     } else {
       
       vcov.mat <- chol2inv(vcov.Chol)

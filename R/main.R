@@ -9,6 +9,7 @@
 #' @import tensor
 #' @import Rdpack
 #' @importFrom Matrix nearPD
+#' @importFrom matrixcalc is.positive.definite
 NULL
 #' @title Fitting 4 Parameter Logistic (4PL) models to dose-response data.
 #' 
@@ -81,8 +82,10 @@ dr4pl <- function(...) UseMethod("dr4pl")
 #' @author Hyowon An, \email{ahwbest@gmail.com}
 #' @author Justin T. Landis, \email{jtlandis314@gmail.com}
 #' @author Aubrey G. Bailey, \email{aubreybailey@gmail.com}
+#' 
 #' @seealso \code{\link{confint.dr4pl}}, \code{\link{gof.dr4pl}},
 #' \code{\link{print.dr4pl}}, \code{\link{summary.dr4pl}}
+#' 
 #' @export
 dr4pl.formula <- function(formula,
                           data = list(),

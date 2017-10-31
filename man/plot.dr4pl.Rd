@@ -79,5 +79,9 @@ plot(e,
 
 }
 \author{
-Hyowon An, Justin T. Landis and Aubrey G. Bailey
+Hyowon An, \email{ahwbest@gmail.com}
+
+Justin T. Landis, \email{jtlandis314@gmail.com}
+
+Aubrey G. Bailey, \email{aubreybailey@gmail.com}
 }
