@@ -49,12 +49,14 @@ LogToParm <- function(retheta) {
   return(theta)
 }
 
-# Compute an estimated mean response.
-#
-# @param x Dose levels.
-# @param theta Parameters of the 4PL model.
-#
-# @return Predicted response values.
+#' Compute an estimated mean response.
+#'
+#' @param x Dose levels.
+#' @param theta Parameters of the 4PL model.
+#'
+#' @return Predicted response values.
+#' 
+#' @export
 MeanResponse <- function(x, theta) {
 
   ### Check whether function arguments are appropriate
