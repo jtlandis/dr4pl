@@ -99,8 +99,18 @@ dr4pl.formula <- function(formula,
                           failure.message = FALSE,
                           ...) {
   
-  mf <- model.frame(formula = formula, data = data)
-  dose <- model.matrix(attr(mf, "terms"), data = mf)[, 2]
+  mf <- model.frame(formula = formula, data = data)  # Model frame
+  mm <- model.matrix(attr(mf, "terms"), data = mf)  # Model matrix
+  
+  # Check whether only one variable for doses was given in the formula.
+  # Currently only one variable for doses is allowed.
+  if(ncol(mm)>2) {
+    
+    stop("Only one indepedent variable should be specified for doses.")
+  }
+  
+  # Dose-response models do not have intercepts.
+  dose <- mm[, -1]
   response <- model.response(mf)
   
   obj <- dr4pl.default(dose = dose,
@@ -129,25 +139,25 @@ dr4pl.formula <- function(formula,
 #'
 #' @examples 
 #'   ##Assign method.init = "logistic" to use logistic method of estimation.
-#'   a <- dr4pl(dose = sample_data_1$Dose, 
-#'                response = sample_data_1$Response, 
-#'                method.init = "logistic")
+#'   a <- dr4pl(dose = sample_data_1$Dose,
+#'              response = sample_data_1$Response,
+#'              method.init = "logistic")
 #'   plot(a)
 #'
 #'   ##Use default or Assign method.init = "Mead" to use Mead's method of estimation.
 #'   # Use method.robust to select desired loss function
 #'   b <- dr4pl(Response~Dose, 
-#'                data = sample_data_4,
-#'                method.init = "Mead", 
-#'                method.robust = "Tukey" )
+#'              data = sample_data_4,
+#'              method.init = "Mead", 
+#'              method.robust = "Tukey" )
 #'   plot(b)
 #' 
 #'   ##compatable with ggplot
 #'   library(ggplot2) #load ggplot2
 #'   c <- dr4pl(Response~Dose, 
-#'           data = drc_error_2, 
-#'           method.optim = "CG", 
-#'           trend = "decreasing" )
+#'              data = drc_error_2, 
+#'              method.optim = "CG", 
+#'              trend = "decreasing" )
 #'   d <- plot(c, x.breaks = c(.00135, .0135, .135, 1.35, 13.5))
 #'   d + theme_grey()
 #' @export

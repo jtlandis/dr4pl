@@ -12,8 +12,8 @@
 #' @param ... Other parameters to be passed
 #' 
 #' @return A matrix of the confidence intervals in which each row represents a
-#'   parameter and each column represents the lower and upper bounds of the
-#'   confidence intervals of the corresponding parameters.
+#' parameter and each column represents the lower and upper bounds of the
+#' confidence intervals of the corresponding parameters.
 #'   
 #' @details This function computes the approximate confidence intervals of the
 #' true parameters of a 4PL model based on the asymptotic normality of the least
@@ -193,8 +193,6 @@ gof <- function(object) {
   obj.gof.dr4pl <- list(gof.stat, gof.pval, gof.df)
   names(obj.gof.dr4pl) <- c("Statistic", "pValue", "DegreesOfFreedom")
   
-  class(obj.gof.dr4pl) <- "gof.dr4pl"
-  
   return(obj.gof.dr4pl)
 }
 
@@ -274,26 +272,25 @@ IC <- function(object, inhib.percent) {
 #'
 #' plot(ryegrass.dr4pl)
 #' 
-#' ##Able to further edit plots
+#' ## Able to further edit plots.
 #' library(ggplot2) #needed to change color to green
-#' ryegrass.dr4pl <- dr4pl::dr4pl(Response ~ Dose, 
-#'                                data = sample_data_1, 
+#' ryegrass.dr4pl <- dr4pl::dr4pl(Response ~ Dose,
+#'                                data = sample_data_1,
 #'                                text.title = "Sample Data Plot")
 #'
-#' a <- plot(ryegrass.dr4pl) 
+#' a <- plot(ryegrass.dr4pl)
 #' a + geom_point(color = "green", size = 5)
 #' 
 #' ##Bring attention to outliers using parameter indices.outlier.
 #' 
-#' a <- dr4pl(Response ~ Dose, 
-#'            data = drc_error_3, 
-#'            method.init = "Mead", 
-#'            method.robust = "absolute" )
+#' a <- dr4pl(Response ~ Dose,
+#'            data = drc_error_3,
+#'            method.init = "Mead",
+#'            method.robust = "absolute")
 #' plot(a, indices.outlier = c(90, 101))
 #' 
-#' ##Change the plot title default with parameter text.title
-#' 
-#' ryegrass.dr4pl <- dr4pl::dr4pl(Response ~ Dose, 
+#' ## Change the plot title default with parameter text.title.
+#' ryegrass.dr4pl <- dr4pl::dr4pl(Response ~ Dose,
 #'                                data = sample_data_1)
 #' plot(ryegrass.dr4pl, text.title = "My New Dose Response plot")
 #' 
@@ -302,9 +299,9 @@ IC <- function(object, inhib.percent) {
 #' library(drc) #needed to load 'decontaminants' data set
 #' d <- subset(decontaminants, group %in% "hpc")
 #' e <- dr4pl(count~conc, data = d)
-#' plot(e, 
-#'      text.title = "hpc Decontaminants Plot", 
-#'      text.x = "Concentration", 
+#' plot(e,
+#'      text.title = "hpc Decontaminants Plot",
+#'      text.x = "Concentration",
 #'      text.y = "Count")
 #' 
 #' @author Hyowon An, \email{ahwbest@gmail.com}
@@ -422,12 +419,12 @@ print.dr4pl <- function(object, ...) {
 #' @param ... all normally printable arguments
 #' 
 #' @examples
-#' library(drc) #needed for ryegrass data set
-#' ryegrass.dr4pl <- dr4pl(rootl ~ conc, data = ryegrass)
-#' print(summary(ryegrass.dr4pl))
+#' library(drc)  # Needed for the data set 'ryegras'
+#' dr4pl.ryegrass <- dr4pl(rootl ~ conc, data = ryegrass)
+#' print(summary(dr4pl.ryegrass))
 #' 
-#' obj.dr4pl <- dr4pl(Response ~ Dose, data = sample_data_7)
-#' print(summary(obj.dr4pl))
+#' dr4pl.7 <- dr4pl(Response ~ Dose, data = sample_data_7)
+#' print(summary(dr4pl.7))
 print.summary.dr4pl <- function(object, ...) {
   
   cat("Call:\n")
