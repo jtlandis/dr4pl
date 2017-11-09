@@ -268,38 +268,36 @@ IC <- function(object, inhib.percent) {
 #' @param ... All arguments that can normally be passed to ggplot.
 #' 
 #' @examples
-#' ryegrass.dr4pl <- dr4pl::dr4pl(Response ~ Dose, data = sample_data_1)
+#' dr4pl.1 <- dr4pl(Response ~ Dose, data = sample_data_1)
 #'
-#' plot(ryegrass.dr4pl)
+#' plot(dr4pl.1)
 #' 
 #' ## Able to further edit plots.
 #' library(ggplot2) #needed to change color to green
-#' ryegrass.dr4pl <- dr4pl::dr4pl(Response ~ Dose,
-#'                                data = sample_data_1,
-#'                                text.title = "Sample Data Plot")
+#' dr4pl.1 <- dr4pl(Response ~ Dose,
+#'                         data = sample_data_1,
+#'                         text.title = "Sample Data Plot")
 #'
-#' a <- plot(ryegrass.dr4pl)
+#' a <- plot(dr4pl.1)
 #' a + geom_point(color = "green", size = 5)
 #' 
-#' ##Bring attention to outliers using parameter indices.outlier.
-#' 
-#' a <- dr4pl(Response ~ Dose,
-#'            data = drc_error_3,
-#'            method.init = "Mead",
-#'            method.robust = "absolute")
-#' plot(a, indices.outlier = c(90, 101))
+#' ## Bring attention to outliers using parameter indices.outlier.
+#' dr4pl.3 <- dr4pl(Response ~ Dose,
+#'                  data = drc_error_3,
+#'                  method.init = "Mead",
+#'                  method.robust = "absolute")
+#' plot(dr4pl.3, indices.outlier = c(90, 101))
 #' 
 #' ## Change the plot title default with parameter text.title.
-#' ryegrass.dr4pl <- dr4pl::dr4pl(Response ~ Dose,
-#'                                data = sample_data_1)
-#' plot(ryegrass.dr4pl, text.title = "My New Dose Response plot")
+#' dr4pl.1 <- dr4pl::dr4pl(Response ~ Dose,
+#'                         data = sample_data_1)
+#' plot(dr4pl.1, text.title = "My New Dose Response plot")
 #' 
 #' ##Change the labels of the x and y axis to your need
-#' 
-#' library(drc) #needed to load 'decontaminants' data set
-#' d <- subset(decontaminants, group %in% "hpc")
-#' e <- dr4pl(count~conc, data = d)
-#' plot(e,
+#' library(drc)  # Needed to load 'decontaminants' data set
+#' data.hpc <- subset(decontaminants, group %in% "hpc")
+#' dr4pl.hpc <- dr4pl(count~conc, data = data.hpc)
+#' plot(dr4pl.hpc,
 #'      text.title = "hpc Decontaminants Plot",
 #'      text.x = "Concentration",
 #'      text.y = "Count")
@@ -406,6 +404,11 @@ plot.dr4pl <- function(x,
 #' print(obj.dr4pl)
 print.dr4pl <- function(object, ...) {
   
+  if(!inherits(object, "dr4pl")) {
+    
+    stop("The object to be printed should be of the class \'dr4pl\'.")
+  }
+
   cat("Call:\n")
   print(object$call)
   
@@ -426,6 +429,11 @@ print.dr4pl <- function(object, ...) {
 #' dr4pl.7 <- dr4pl(Response ~ Dose, data = sample_data_7)
 #' print(summary(dr4pl.7))
 print.summary.dr4pl <- function(object, ...) {
+  
+  if(!inherits(object, "dr4pl")) {
+    
+    stop("The summary of the object to be printed should be of the class \'dr4pl\'.")
+  }
   
   cat("Call:\n")
   print(object$call)

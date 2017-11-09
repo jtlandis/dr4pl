@@ -17,8 +17,8 @@
 }
 \value{
 A matrix of the confidence intervals in which each row represents a
-  parameter and each column represents the lower and upper bounds of the
-  confidence intervals of the corresponding parameters.
+parameter and each column represents the lower and upper bounds of the
+confidence intervals of the corresponding parameters.
 }
 \description{
 Compute the approximate confidence intervals of the parameters of a 
