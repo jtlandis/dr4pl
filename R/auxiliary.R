@@ -123,11 +123,12 @@ coef.dr4pl <- function(object, ...) {
 #' @description Perform the goodness-of-fit (gof) test for the 4PL model when there
 #'   are at least two replicates for each dose level.
 #'   
-#' @name gof
+#' @name gof.dr4pl
 #'   
 #' @param object An object of the dr4pl class.
 #' 
-#' @return Object of class `gof.dr4pl' which consists of .
+#' @return A list of results in the order of a F-statistic value, p-value and the
+#' degrees of freedom.
 #'   
 #' @details Perform the goodness-of-fit (gof) test for the 4PL model in which the
 #'   mean response actually follws the 4 Parameter Logistic model. There should
@@ -139,12 +140,12 @@ coef.dr4pl <- function(object, ...) {
 #'
 #' @examples
 #' obj.dr4pl <- dr4pl(Response ~ Dose, data = sample_data_4)  # Fit a 4PL model to data
-#' gof(obj.dr4pl)  # Print the goodness-of-fit test results
+#' gof.dr4pl(obj.dr4pl)  # Print the goodness-of-fit test results
 #'
 #' @references \insertRef{Seber1989}{dr4pl}
 #'
 #' @export
-gof <- function(object) {
+gof.dr4pl <- function(object) {
   
   x <- object$data$Dose  # Dose levels
   y <- object$data$Response  # Responses
@@ -453,8 +454,8 @@ print.summary.dr4pl <- function(object, ...) {
 #'   
 #' @name vcov.dr4pl
 #'   
-#' @param object An object of the dr4pl class
-#' @param parm Parameters of a 4PL model
+#' @param object An object of the dr4pl class.
+#' @param ... Other function arguments to be passed to the default 'vcov' function.
 #' 
 #' @return The variance-covariance matrix of the parameter estimators of a 4PL
 #' model whose columns are in the order of the upper asymptote, IC50, slope and lower
@@ -477,29 +478,17 @@ print.summary.dr4pl <- function(object, ...) {
 #' \insertRef{Seber1989}{dr4pl}
 #' 
 #' @export
-vcov.dr4pl <- function(object, parm = NULL, ...) {
+vcov.dr4pl <- function(object, ...) {
   
   x <- object$data$Dose  # Vector of dose levels
   y <- object$data$Response  # Vector of responses
   
-  # If parameter estimates are not provided by a user, then proceed with the
-  # estimates stored in the input dr4pl object.
-  if(is.null(parm)) {
-    
-    retheta <- ParmToLog(object$parameters)
-  } else if(length(parm)!=4||parm[2]<=0) {
-    
-    stop("The input argument \"parm\" should be of length 4 and the IC50 estimate
-         should be nonnegative.")
-  } else {
-    
-    retheta <- ParmToLog(parm)
-  }
-  
+  retheta <- ParmToLog(object$parameters)
+
   C.hat <- HessianLogIC50(retheta, x, y)/2  # Estimated variance-covariance matrix
   
   # If the Hessian matrix is not positive definite, use
-  if(!is.positive.semi.definite(C.hat)) {
+  if(!matrixcalc::is.positive.semi.definite(C.hat)) {
     
     Jacobian <- DerivativeFLogIC50(retheta, x)
     C.hat <- t(Jacobian)%*%Jacobian
@@ -523,7 +512,7 @@ vcov.dr4pl <- function(object, parm = NULL, ...) {
     if(inherits(vcov.Chol, "try-error")) {
       
       ind.mat.inv <- FALSE
-      C.hat.pd <- nearPD(C.hat)$mat/2
+      C.hat.pd <- Matrix::nearPD(C.hat)$mat/2
       vcov.mat <- solve(C.hat.pd)
     } else {
       
