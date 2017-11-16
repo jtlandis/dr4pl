@@ -126,17 +126,18 @@ coef.dr4pl <- function(object, ...) {
 #' @name gof.dr4pl
 #'   
 #' @param object An object of the dr4pl class.
+#' @param n.signif.digit Number of significant digits after the decimal point to be 
+#' printed. The default value is 4, but users can change the value on their own.
 #' 
-#' @return A list of results in the order of a F-statistic value, p-value and the
-#' degrees of freedom.
+#' @return A list of results in the order of a F-statistic value, p-value and a
+#' degree of freedom.
 #'   
-#' @details Perform the goodness-of-fit (gof) test for the 4PL model in which the
-#'   mean response actually follws the 4 Parameter Logistic model. There should
-#'   be at least two replicates at each dose level. The test statistic follows the
-#'   Chi squared distributions with the (n - 4) degrees of freedom where n is the
-#'   number of observations and 4 is the number of parameters in the 4PL model. For
-#'   detailed explanation of the method, please refer to Subsection 2.1.5 of
-#'   Seber and Wild (1989).
+#' @details Perform a goodness-of-fit (gof) test for the goodness of the 4PL models
+#' for dose-response data. There should be at least two replicates at each dose
+#' level. The test statistic follows the F distribution with degress of freedom
+#' (n - 4) and (N - n) where N stands for the total number of observations and n
+#' stands for the number of dose levels. For detailed explanation of the method,
+#' please refer to Subsection 2.1.5 of Seber and Wild (1989).
 #'
 #' @examples
 #' obj.dr4pl <- dr4pl(Response ~ Dose, data = sample_data_4)  # Fit a 4PL model to data
@@ -145,7 +146,7 @@ coef.dr4pl <- function(object, ...) {
 #' @references \insertRef{Seber1989}{dr4pl}
 #'
 #' @export
-gof.dr4pl <- function(object) {
+gof.dr4pl <- function(object, n.signif.digit = 4) {
   
   x <- object$data$Dose  # Dose levels
   y <- object$data$Response  # Responses
@@ -154,21 +155,14 @@ gof.dr4pl <- function(object) {
   n <- length(unique(x))  # Number of dose levels
   N <- object$sample.size  # Total number of observations
   p <- 4  # Number of parameters of the 4PL model is 4
-  # Numbers of observations per dose level
-  n.obs.per.dose <- tapply(X = y, INDEX = x, FUN = length)
   
   # Check whether function arguments are appropriate
   if(n <= 4) {
     
     stop("The number of dose levels should be larger than four to perform the
-         goodness-of-fit test for the 4PL model.")
+         goodness-of-fit test for the 4PL models.")
   }
-  if(any(n.obs.per.dose <= 1)) {
-    
-    stop("There should be more than one observation for each dose level to perform
-         the goodness-of-fit test.")
-  }
-  
+
   levels.x.sorted <- sort(unique(x))
   
   x.sorted <- sort(x)
@@ -180,21 +174,39 @@ gof.dr4pl <- function(object) {
   # Fitted response values
   y.fitted <- MeanResponse(levels.x.sorted, object$parameters)
   
+  # Numbers of observations per dose level
+  n.obs.per.dose <- tapply(X = y.sorted, INDEX = x.sorted, FUN = length)
+  
+  if(any(n.obs.per.dose <= 1)) {
+    
+    stop("There should be more than one observation for each dose level to perform
+         the goodness-of-fit test.")
+  }
+  
   y.bar.rep <- rep(y.bar, times = n.obs.per.dose)
   
-  # Sum of squares due to regression
-  gof.numer <- J.i%*%(y.bar - y.fitted)^2/(n - p)
-  # Sum of squares due to errors
-  gof.denom <- sum((y.sorted - y.bar.rep)^2)/(N - n)
+  ### Compute statistics values for the goodness-of-fit test.
+  ss.lof <- J.i%*%(y.bar - y.fitted)^2  # Lack-of-fit sum of squares.
+  ss.error <- sum((y.sorted - y.bar.rep)^2)  # Pure-error sum of squares.
+  ss.vec <- c(ss.lof, ss.error)  # Vector of sums of squares.
   
-  gof.stat <- gof.numer/gof.denom
+  df.gof <- c(n - p, N - n)  #  Degrees of freedom.
+  
+  ms.vec <- ss.vec/df.gof
+  
+  gof.stat <- ms.vec[1]/ms.vec[2]
   gof.pval <- pf(gof.stat, df1 = n - p, df2 = N - n, lower.tail = FALSE)  # p-value
-  gof.df <- c(n - p, N - n)
+
+  result.tab <- cbind(round(df.gof, digits = n.signif.digit),
+                      round(ss.vec, digits = n.signif.digit),
+                      round(ms.vec, digits = n.signif.digit),
+                      c(round(gof.stat, digits = n.signif.digit), ""),
+                      c(round(gof.pval, digits = n.signif.digit), ""))
+  row.names(result.tab) <- c("Lack-of-fit", "Pure-error")
+  colnames(result.tab) <- c("d.f.", "Sum Sq", "Mean Sq", "F value", "Pr(>F)")
   
-  obj.gof.dr4pl <- list(gof.stat, gof.pval, gof.df)
-  names(obj.gof.dr4pl) <- c("Statistic", "pValue", "DegreesOfFreedom")
-  
-  return(obj.gof.dr4pl)
+  cat("Goodnes-of-fit test\n\n")
+  print(noquote(result.tab))
 }
 
 #' @title Obtain Inhibitory Concentrations (IC) of a dose-response curve
@@ -430,11 +442,6 @@ print.dr4pl <- function(object, ...) {
 #' dr4pl.7 <- dr4pl(Response ~ Dose, data = sample_data_7)
 #' print(summary(dr4pl.7))
 print.summary.dr4pl <- function(object, ...) {
-  
-  if(!inherits(object, "dr4pl")) {
-    
-    stop("The summary of the object to be printed should be of the class \'dr4pl\'.")
-  }
   
   cat("Call:\n")
   print(object$call)
