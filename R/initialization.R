@@ -1,4 +1,3 @@
-
 #' Compute the Hill bounds based on initial parameter estimates and data.
 #' 
 #' @param x Vector of doses.
@@ -19,9 +18,9 @@
 #' is infeasible, a variation of the method in Wang et al. (2010) is used. The
 #' parameter \code{level} is only for simulation.
 #' 
-#' @author Hyowon An
+#' @author Hyowon An, \email{ahwbest@gmail.com}.
 #' 
-#' @seealso \code{FindInitialParms}
+#' @seealso \code{\link{FindInitialParms}}, \code{\link{FindLogisticGrids}}.
 #' 
 #' @references \insertRef{Higham2002}{dr4pl} \insertRef{Wang2010}{dr4pl}
 #' 
@@ -48,13 +47,13 @@ FindHillBounds <- function(x, y, theta,
     Hessian <- HessianLogIC50(retheta, x, y)
     
     # Obtain a positie definite approximation of the Hessian matrix
-    C.hat <- nearPD(Hessian)$mat/2
+    C.hat <- Matrix::nearPD(Hessian)$mat/2
   ## When the gradient vector is used.
   } else {
     
     deriv <- DerivativeFLogIC50(retheta, x)
     
-    C.hat <- nearPD(t(deriv)%*%deriv)$mat
+    C.hat <- Matrix::nearPD(t(deriv)%*%deriv)$mat
   }
   
   ind.mat.inv <- TRUE  # TRUE if matrix inversion is successful, FALSE otherwise
@@ -155,7 +154,7 @@ FindLogisticGrids <- function(x, y, retheta.init, use.Hessian = FALSE) {
     Hessian <- HessianLogIC50(retheta.init, x, y)
     
     # Obtain a positie definite approximation of the Hessian matrix
-    C.hat <- nearPD(Hessian)$mat/2
+    C.hat <- Matrix::nearPD(Hessian)$mat/2
     ## When the gradient vector is used.
   } else {
     
@@ -243,11 +242,14 @@ FindLogisticGrids <- function(x, y, retheta.init, use.Hessian = FALSE) {
 #' method to be used to fit a model. See \code{\link{dr4pl}} for detailed
 #' explanation.
 #'
-#' @return Initial parameter estimates of a 4PL model in the order of
-#' 'Upper asymptote', 'IC50', 'Slope' and 'Lower asymptote'.
+#' @return Initial parameter estimates of a 4PL model in the order of the
+#' upper asymptote, IC50, Slope and lower asymptote parameters.
 #' 
 #' @export
-FindInitialParms <- function(x, y, trend, method.init, method.robust) {
+FindInitialParms <- function(x, y,
+                             trend = "auto",
+                             method.init = "Mead",
+                             method.robust = NULL) {
 
   n.grid.cells <- 25
   
@@ -445,7 +447,7 @@ FindInitialParms <- function(x, y, trend, method.init, method.robust) {
 # @param theta.1 Estimate of the upper asymptote parameter
 # @param theta.4 Estimate of the lower asymptote parameter
 #
-# @return Parameter estimates of a 4Pl model in the order from the upper asymptote,
+# @return Parameter estimates of a 4PL model in the order from the upper asymptote,
 # IC50, slope and lower asymptote.
 Logistic <- function(x, y, theta.1, theta.4) {
   
