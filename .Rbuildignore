@@ -19,3 +19,4 @@
 ^packrat/
 ^\.Rprofile$
 ^\.travis\.yml$
+^bitbucket-pipelines\.yml$
