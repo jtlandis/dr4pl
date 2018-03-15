@@ -4,7 +4,7 @@
 \alias{print.dr4pl}
 \title{Print the dr4pl object to screen.}
 \usage{
-print.dr4pl(object, ...)
+\method{print}{dr4pl}(object, ...)
 }
 \arguments{
 \item{object}{a dr4pl object to be printed}
