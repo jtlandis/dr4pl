@@ -10,3 +10,4 @@ README.html
 /revdep/.cache.rds
 man/*
 *.Rproj
+inst/doc
