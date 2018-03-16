@@ -7,7 +7,6 @@
 #' @import stats
 #' @import ggplot2
 #' @import tensor
-#' @import Rdpack
 #' @importFrom Matrix nearPD
 #' @importFrom matrixcalc is.positive.definite
 NULL

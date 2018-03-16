@@ -16,12 +16,14 @@ RdMacros: Rdpack
 RoxygenNote: 6.0.1
 Imports:
     ggplot2,
-    devtools,
-    drc,
     Matrix,
     matrixcalc,
-    Rdpack,
-    testthat,
     tensor
-Suggests: knitr, rmarkdown
+Suggests: 
+    devtools,
+    roxygen2,
+    testthat,
+    drc,
+    knitr,
+    rmarkdown,
 VignetteBuilder: knitr
