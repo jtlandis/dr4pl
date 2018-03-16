@@ -1,15 +1,16 @@
 ---
 title: "R package dr4pl usage examples"
 author: "Hyowon An and Justin T. Landis"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{dr4pl usage examples}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.keep='none' )
 ```
 
 ##Installing packages
@@ -40,12 +41,15 @@ As you can see, this data set contains an extreme outlier at the dosage level 1e
 
 ```{r}
 tryCatch({
-  
   drm(Response~Dose, data = drc_error_1, fct = LL.4())
-}, error = function(err) {
-  
+},
+warning = function(war) {
+  # warning handler picks up where error was generated
+  print(paste(sep = " ", war))
+},
+error = function(err) {
   # error handler picks up where error was generated
-  print(err)
+  print(paste(sep = " ", err))
 })
 ```
 
@@ -114,12 +118,15 @@ This data set has two outliers in the largest dosage level. This data set also e
 
 ```{r}
 tryCatch({
-  
   drm(Response~Dose, data = drc_error_4, fct = LL.4())
-}, error = function(err) {
-  
+},
+warning = function(war) {
+  # warning handler picks up where error was generated
+  print(paste(sep = " ", war))
+},
+error = function(err) {
   # error handler picks up where error was generated
-  print(paste(err))
+  print(paste(sep = " ", err))
 })
 ```
 
