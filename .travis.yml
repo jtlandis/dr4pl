@@ -33,7 +33,7 @@ r_binary_packages:
   - memoise
   - mgcv
   - openssl
-  - rcpp
+  - Rcpp
   - roxygen2
   - nlme
   - survival
