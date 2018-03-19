@@ -23,4 +23,4 @@ README.md: README.Rmd R/*.R
 	R -e 'knitr::opts_chunk$set(fig.path="inst/image/");knitr::knit("README.Rmd")'
 
 $(PACKAGEFILE): man R/*.R DESCRIPTION inst/doc
-	R -e 'devtools::check(cran=TRUE);devtools::build()'
+	R -e 'devtools::check(cran=TRUE);devtools::document(roclets=c('rd', 'collate', 'namespace', 'vignette'));devtools::build()'
