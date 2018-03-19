@@ -11,7 +11,6 @@ addons:
       - libcurl4-openssl-dev
       - libssl-dev
       - pandoc
-      - pandoc pandoc-citeproc
       - texlive-latex-extra
       - libnlopt-dev
       - r-cran-nloptr
