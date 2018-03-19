@@ -1,3 +1,4 @@
+
 Package: dr4pl
 Type: Package
 Date: 2018-03-19
@@ -18,7 +19,8 @@ Imports:
     ggplot2,
     Matrix,
     matrixcalc,
-    tensor
+    tensor,
+    Rdpack
 Suggests: 
     drc,
     devtools,
