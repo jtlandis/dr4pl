@@ -29,8 +29,6 @@ addons:
       - r-cran-nlme
       - r-cran-survival
       - r-cran-rcpp
-      - r-cran-nloptr
-      - r-cran-multcomp
       - r-cran-plyr
       - r-cran-magrittr
       - r-cran-mgcv

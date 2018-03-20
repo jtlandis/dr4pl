@@ -12,22 +12,15 @@ install:
 	R -e 'devtools::install_bitbucket("dittmerlab/dr4pl")'	
 
 localInstall:
-	R -e 'devtools::install()'
+	R -e 'devtools::install(dependencies="suggests")'
 
 man: R/*.R 
-	R -e 'devtools::document()'
+	R -e 'devtools::document(roclets=c('rd', 'collate', 'namespace', 'vignette'))'
 	touch man
-
-
-inst/doc: vignettes/*.Rmd R/*.R
-	R -e 'devtools::build_vignettes()'
-	touch inst/doc inst/image
 
 README.md: README.Rmd R/*.R
 	make localInstall
-	R -e 'knitr::opts_chunk$$set(fig.path="inst/image/");knitr::knit("README.Rmd")'
-	#sed '/^---$$/,/^---$$/d' README.md --in-place
-	
+	R -e 'knitr::opts_chunk$set(fig.path="inst/image/");knitr::knit("README.Rmd")'
+
 $(PACKAGEFILE): man R/*.R DESCRIPTION inst/doc
-	#sed -i "s/^Date:.*$$/Date: `date +%Y-%m-%d`/" DESCRIPTION
-	R -e 'devtools::check(cran=TRUE);devtools::build()'
+	R -e 'devtools::check(cran=TRUE);devtools::document(roclets=c('rd', 'collate', 'namespace', 'vignette'));devtools::build()'
