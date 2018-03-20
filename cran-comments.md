@@ -1,7 +1,7 @@
 ---
 title: "Untitled"
 author: "Justin L"
-date: "2018-03-19"
+date: "2018-03-20"
 output: html_document
 ---
 
@@ -13,7 +13,7 @@ output: html_document
 
 
 ## R CMD check results
-There was no Erros, Warnings, or Notes.
+There were no Errors, or Notes.
     
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.
