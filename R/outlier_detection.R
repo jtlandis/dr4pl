@@ -1,6 +1,8 @@
 
 #' Detect outliers by the method of Motulsky and Brown (2006).
 #' 
+#' @name OutlierDetection
+#' 
 #' @param residuals Vector of residuals from a robust fit.
 #' 
 #' @return Vector of indices of outliers in the input vector of residuals
