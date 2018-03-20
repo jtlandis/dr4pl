@@ -1,7 +1,5 @@
 ## ----setup, include=FALSE------------------------------------------------
-knitr::opts_knit$set(base.url = "../inst/doc/", base.dir = "../inst/doc/" , output_dir ="../inst/doc/")
-#reportDirectory = instDoc))
-knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.path = "../inst/doc/", fig.keep='none' )
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7)
 
 ## ------------------------------------------------------------------------
 library(drc)
