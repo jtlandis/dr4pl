@@ -1,8 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^packrat/
-^cran-comments\.md$
-^NEWS\.md$
 
 ^\.travis\.yml$
 ^bitbucket-pipelines\.yml$
