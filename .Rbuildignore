@@ -6,6 +6,6 @@
 ^bitbucket-pipelines\.yml$
 ^makefile$
 
-cran-comments.md3
+cran-comments.md
 ^README\.Rmd$
 ^README-.*\.png$
