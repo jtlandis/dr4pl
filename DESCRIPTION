@@ -1,8 +1,8 @@
 Package: dr4pl
 Type: Package
-Date: 2017-10-17
-Title: Dose Response Data Analysis using the 4 Parameter Logistic (4PL) Model
-Version: 1.1.0
+Date: 2018-03-20
+Title: Dose Response Data Analysis using the 4 Parameter Logistic (4pl) Model
+Version: 1.1.1
 Depends: R (>= 3.1.0)
 Authors@R: c(person("Justin T.", "Landis", rol = c("aut", "cre"), email = "jtlandis314@gmail.com"),
              person("Hyowon", "An", role = "aut", email = "ahwbest@gmail.com"),
@@ -18,7 +18,8 @@ Imports:
     ggplot2,
     Matrix,
     matrixcalc,
-    tensor
+    tensor,
+    Rdpack
 Suggests: 
     drc,
     devtools,
