@@ -23,7 +23,7 @@
 #' 
 #' @seealso \code{\link{FindInitialParms}}, \code{\link{FindLogisticGrids}}.
 #' 
-#' @references \insertRef{Higham2002}{dr4pl} \insertRef{Wang2010}{dr4pl}
+#' \@references \insertRef{Higham2002}{dr4pl} \insertRef{Wang2010}{dr4pl}
 #' 
 #' @export
 FindHillBounds <- function(x, y, theta,
@@ -140,7 +140,7 @@ FindHillBounds <- function(x, y, theta,
 #' 
 #' @seealso \code{FindHillBounds}, \code{FindInitialParms}
 #' 
-#' @references
+#' \@references
 #' \insertRef{Wang2010}{dr4pl}
 #' 
 #' @export
