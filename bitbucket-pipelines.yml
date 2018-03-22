@@ -1,6 +1,4 @@
  # Only use spaces to indent your .yml configuration.
- # -----
- # You can specify a custom docker image from Docker Hub as your build environment.
  image: rocker/ropensci:latest
  
  pipelines:
@@ -10,19 +8,13 @@
            - rdeps
          script:
            - cd /opt/atlassian/pipelines/agent/build
-           - ./makefile
+           #- ./makefile
+           - R -e 'devtools::install_deps(dependencies = TRUE)'
+           - R -e 'devtools::document(roclets=c("rd", "collate", "namespace", "vignette"))'
+           - R -e 'knitr::opts_chunk$set(fig.path="inst/image/");knitr::knit("README.Rmd")'
+           - R -e 'devtools::check(cran=TRUE);devtools::build()' #manual=FALSE, vignette=FALSE
+           #- R -e 'devtools::build_win()'
+           #https://confluence.atlassian.com/bitbucket/publish-and-link-your-build-artifacts-872137736.html
  definitions:
   caches:
     rdeps: /usr/local/lib/R/site-library
-# R -e 'devtools::install_deps(".", dependencies=TRUE, upgrade=FALSE)'
-#- man:
-#  - R -e 'devtools::document()'
-#  - touch man
-#- inst/doc: vignettes/*.Rnw R/*.R
-#- script:
-#  - R -e 'devtools::build_vignettes()'
-#  - touch inst/doc inst/image
-#  - README.md: README.Rmd R/*.R
-#  - make localInstall
-#  - R -e 'knitr::opts_chunk$$set(fig.path="inst/image/");knitr::knit("README.Rmd")'
-#  - sed '/^---$$/,/^---$$/d' README.md --in-place

@@ -15,12 +15,15 @@ ggplot(drc_error_1, aes(x = Dose, y = Response)) +  # Data name, variable names
 
 ## ------------------------------------------------------------------------
 tryCatch({
-  
   drm(Response~Dose, data = drc_error_1, fct = LL.4())
-}, error = function(err) {
-  
+},
+warning = function(war) {
+  # warning handler picks up where error was generated
+  print(paste(sep = " ", war))
+},
+error = function(err) {
   # error handler picks up where error was generated
-  print(err)
+  print(paste(sep = " ", err))
 })
 
 ## ------------------------------------------------------------------------
@@ -62,12 +65,15 @@ ggplot(drc_error_4, aes(x = Dose, y = Response)) +
 
 ## ------------------------------------------------------------------------
 tryCatch({
-  
   drm(Response~Dose, data = drc_error_4, fct = LL.4())
-}, error = function(err) {
-  
+},
+warning = function(war) {
+  # warning handler picks up where error was generated
+  print(paste(sep = " ", war))
+},
+error = function(err) {
   # error handler picks up where error was generated
-  print(paste(err))
+  print(paste(sep = " ", err))
 })
 
 ## ------------------------------------------------------------------------
