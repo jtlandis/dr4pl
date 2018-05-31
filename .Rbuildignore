@@ -1,2 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^packrat/
+^\.travis\.yml$
+^bitbucket-pipelines\.yml$
+^makefile$
+^cran-comments.md$
+^README\.Rmd$
+^README-.*\.png$
