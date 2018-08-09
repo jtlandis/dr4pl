@@ -46,6 +46,6 @@ deploy:
   file_glob: true
   file: "${RELEASE_PKG_FILE}"
   on:
-    repo: aubreybailey/dr4pl
+    repo: DittmerLabUNC/dr4pl
     tags: true
     branch: master
