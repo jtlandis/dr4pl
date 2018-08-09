@@ -21,7 +21,7 @@ NULL
 #' available for each dose level.
 #' 
 #' @export
-dr4pl <- function(formula, data, ...)  UseMethod("dr4pl")
+dr4pl <- function(...)  UseMethod("dr4pl")
 
 #' @describeIn dr4pl General 4PL model fitting function for analysis of
 #'   dose-response relation.
