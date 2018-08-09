@@ -33,7 +33,6 @@ addons:
       - r-cran-plyr
       - r-cran-magrittr
       - r-cran-mgcv
-      - r-cran-optparse
       - r-cran-rcurl
       - r-cran-quantreg
 before_deploy:
