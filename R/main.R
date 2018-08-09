@@ -137,54 +137,12 @@ dr4pl.formula <- function(formula,
 #' @param dose Vector of dose levels
 #' @param response Vector of responses
 #'
-<<<<<<< HEAD
-#' plot(ryegrass.drra)
-#' @export
-plot.drra <- function(object, ...) {
-
-  a <- ggplot2::ggplot(aes(x = object$data$Dose, y = object$data$Response), data = object$data)
-  a <- a + stat_function(fun = MeanResponse,
-                         args = list(theta = object$parameters),
-                         size = 1.2)
-  a <- a + geom_point(size = I(5), alpha = I(0.8), color = "blue")
-
-  a <- a + labs(x = "Dose",
-                y = "Response",
-                title = "Dose response curve")
-
-  a <- a + theme(plot.title = element_text(hjust = 0.5))
-
-  # Set parameters for the grids
-  a <- a + theme(strip.text.x = element_text(size = 16))
-  a <- a + theme(panel.grid.minor = element_blank())
-  a <- a + theme(panel.grid.major = element_blank())
-  a <- a + scale_x_log10()
-  a <- a + theme_bw()
-
-  # Set parameters for the titles and text / margin(top, right, bottom, left)
-  a <- a + theme(plot.title = element_text(size = 20, margin = margin(0, 0, 10, 0)))
-  a <- a + theme(axis.title.x = element_text(size = 16, margin = margin(15, 0, 0, 0)))
-  a <- a + theme(axis.title.y = element_text(size = 16, margin = margin(0, 15, 0, 0)))
-  a <- a + theme(axis.text.x = element_text(size = 16))
-  a <- a + theme(axis.text.y = element_text(size = 16))
-
-  a
-}
-
-#' Print the drra object to screen.
-#'
-#' @param x A drra object.
-#' @examples
-#' ryegrass.drra <- drra(rootl ~ conc,
-#'                       data = drc::ryegrass)
-=======
 #' @examples 
 #'   ##Assign method.init = "logistic" to use logistic method of estimation.
 #'   a <- dr4pl(dose = sample_data_1$Dose,
 #'              response = sample_data_1$Response,
 #'              method.init = "logistic")
 #'   plot(a)
->>>>>>> origin/master
 #'
 #'   ##Use default or Assign method.init = "Mead" to use Mead's method of estimation.
 #'   # Use method.robust to select desired loss function
