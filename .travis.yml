@@ -30,12 +30,9 @@ addons:
       - r-cran-nlme
       - r-cran-survival
       - r-cran-rcpp
-      - r-cran-nloptr
-      - r-cran-multcomp
       - r-cran-plyr
       - r-cran-magrittr
       - r-cran-mgcv
-      - r-cran-optparse
       - r-cran-rcurl
       - r-cran-quantreg
 before_deploy:
