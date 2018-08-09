@@ -19,7 +19,8 @@ output:
 
 #release version:
 
-[![packageversion](https://img.shields.io/badge/GitHub%20Package%20version-1.1.2-orange.svg?style=flat-square)](commits/master)
+[![packageversion](https://img.shields.io/badge/GitHub%20Package%20version-1.1.3-orange.svg?style=flat-square)](commits/master)
+
 
 ##dr4pl
 
