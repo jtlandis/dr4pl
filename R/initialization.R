@@ -1,3 +1,4 @@
+#' @title FindHillBounds
 #' Compute the Hill bounds based on initial parameter estimates and data.
 #' @name FindHillBounds
 #' 
