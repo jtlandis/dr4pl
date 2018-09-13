@@ -281,6 +281,7 @@ IC <- function(object, inhib.percent) {
 #' @param ... All arguments that can normally be passed to ggplot.
 #' 
 #' @examples
+#' \dontrun{
 #' dr4pl.1 <- dr4pl(Response ~ Dose, data = sample_data_1)
 #'
 #' plot(dr4pl.1)
@@ -314,6 +315,7 @@ IC <- function(object, inhib.percent) {
 #'      text.title = "hpc Decontaminants Plot",
 #'      text.x = "Concentration",
 #'      text.y = "Count")
+#' }
 #' 
 #' @author Hyowon An, \email{ahwbest@gmail.com}
 #' @author Justin T. Landis, \email{jtlandis314@gmail.com}
