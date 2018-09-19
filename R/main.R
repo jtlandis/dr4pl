@@ -53,6 +53,8 @@ dr4pl <- function(...)  UseMethod("dr4pl")
 #' @param failure.message Indicator of whether a message indicating attainment of
 #' the Hill bounds and possible resolutions will be printed to the console (TRUE)
 #' or hidden (FALSE).
+#' @param upperl a numeric value to impose a upper limit on \eqn{\theta[1]} estimate.
+#' @param lowerl a numeric value to impose a lower limit on \eqn{\theta[4]} estimate.
 #' @param ... Further arguments to be passed to \code{constrOptim}.
 #' 
 #' @return A 'dr4pl' object for which "confint", "gof", "print" and "summary"
@@ -97,6 +99,8 @@ dr4pl.formula <- function(formula,
                           use.Hessian = FALSE,
                           level = 0.9999,
                           failure.message = FALSE,
+                          upperl = NULL,
+                          lowerl = NULL,
                           ...) {
   
   mf <- model.frame(formula = formula, data = data)  # Model frame
@@ -123,6 +127,8 @@ dr4pl.formula <- function(formula,
                        use.Hessian = use.Hessian,
                        level = level,
                        failure.message = failure.message,
+                       upperl = upperl,
+                       lowerl = lowerl,
                        ...)
   
   obj$call <- match.call()
@@ -146,6 +152,8 @@ dr4pl.data.frame <- function(data,
                           use.Hessian = FALSE,
                           level = 0.9999,
                           failure.message = FALSE,
+                          upperl = NULL,
+                          lowerl = NULL,
                           ...) {
   dose <- data[,deparse(substitute(dose))]
   response <- data[,deparse(substitute(response))]
@@ -159,6 +167,8 @@ dr4pl.data.frame <- function(data,
                        use.Hessian = use.Hessian,
                        level = level,
                        failure.message = failure.message,
+                       upperl = upperl,
+                       lowerl = lowerl,
                        ...)
   
   obj$call <- match.call()
@@ -215,6 +225,8 @@ dr4pl.default <- function(dose,
                           use.Hessian = FALSE,
                           level = 0.9999,
                           failure.message = FALSE,
+                          upperl = NULL,
+                          lowerl = NULL,
                           ...) {
   
   types.trend <- c("auto", "decreasing", "increasing")
@@ -257,7 +269,9 @@ dr4pl.default <- function(dose,
                   method.robust = method.robust,
                   method.optim = method.optim,
                   use.Hessian = use.Hessian,
-                  level = level)
+                  level = level,
+                  upperl = upperl,
+                  lowerl = lowerl)
 
   obj$call <- match.call()
   class(obj) <- "dr4pl"
@@ -356,10 +370,10 @@ dr4pl.default <- function(dose,
 #' 
 #' @name dr4plEst
 #' 
-#' @param dose Vector of dose levels
-#' @param response Vector of responses
-#' @param init.parm Vector of initial parameters of the 4PL model supplied by a
-#'   user.
+#' @param dose a numeric vector of dose levels
+#' @param response a numeric vector of responses
+#' @param init.parm a numeric vector of initial parameters of the 4PL model 
+#' supplied by a user.
 #' @param trend Indicator of whether a dose-response curve is a decreasing 
 #' \eqn{\theta[3]<0} or increasing curve \eqn{\theta[3]>0}. The default is "auto" 
 #' which indicates that the trend of the curve is automatically determined by
@@ -379,6 +393,8 @@ dr4pl.default <- function(dose,
 #' @param use.Hessian Indicator of whether the Hessian matrix (TRUE) or the
 #' gradient vector is used in the Hill bounds.
 #' @param level Confidence level to be used in Hill bounds computation.
+#' @param upperl a numeric value to impose a upper limit on \eqn{\theta[1]} estimate.
+#' @param lowerl a numeric value to impose a lower limit on \eqn{\theta[4]} estimate.
 #' 
 #' @return List of final parameter estimates, name of robust estimation, loss value
 #' and so on.
@@ -389,7 +405,9 @@ dr4plEst <- function(dose, response,
                      method.optim,
                      method.robust,
                      use.Hessian,
-                     level) {
+                     level, 
+                     upperl = NULL,
+                     lowerl = NULL) {
   
   convergence <- TRUE
   x <- dose  # Vector of dose values
@@ -431,6 +449,22 @@ dr4plEst <- function(dose, response,
       
       constr.mat <- rbind(constr.mat, matrix(c(0, 0, 1, 0), nrow = 1, ncol = 4))
       constr.vec <- c(constr.vec, 0)
+    }
+    
+    #Impose constraints on upper limit and or lower limit
+    #"upperl" and "lowerl"
+    if(!is.null(upperl)&!is.null(lowerl)){
+      if(upperl<lowerl) {
+        stop("upperl must be greater than lowerl")
+      }
+    }
+    if(!is.null(upperl)&&is.numeric(upperl)){
+      constr.mat <- rbind(constr.mat, matrix(c(1, 0, 0, 0), nrow = 1, ncol = 4))
+      constr.vec <- c(constr.vec, upperl)
+    }
+    if(!is.null(lowerl)&&is.numeric(lowerl)){
+      constr.mat <- rbind(constr.mat, matrix(c(0, 0, 0, 1), nrow = 1, ncol = 4))
+      constr.vec <- c(constr.vec, lowerl)
     }
     
     # Fit a 4PL model to data
@@ -481,7 +515,22 @@ dr4plEst <- function(dose, response,
       constr.mat <- rbind(constr.mat, matrix(c(0, 0, 1, 0), nrow = 1, ncol = 4))
       constr.vec <- c(constr.vec, 0)
     }
-
+    #Impose constraints on upper limit and or lower limit
+    #"upperl" and "lowerl"
+    if(!is.null(upperl)&!is.null(lowerl)){
+      if(upperl<lowerl) {
+        stop("upperl must be greater than lowerl")
+      }
+    }
+    if(!is.null(upperl)&&is.numeric(upperl)){
+      constr.mat <- rbind(constr.mat, matrix(c(1, 0, 0, 0), nrow = 1, ncol = 4))
+      constr.vec <- c(constr.vec, upperl)
+    }
+    if(!is.null(lowerl)&&is.numeric(lowerl)){
+      constr.mat <- rbind(constr.mat, matrix(c(0, 0, 0, 1), nrow = 1, ncol = 4))
+      constr.vec <- c(constr.vec, lowerl)
+    }
+    
     if(any(constr.mat%*%retheta.init<constr.vec)) {
       
       stop("Initial parameter values are not in the interior of the feasible region.")
