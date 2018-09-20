@@ -32,29 +32,34 @@ dr4pl <- function(...)  UseMethod("dr4pl")
 #' @param data Data frame containing variables in the model.
 #' @param init.parm Vector of initial parameters to be optimized in the model.
 #' @param trend Indicator of whether a dose-response curve is a decreasing 
-#' \eqn{\theta[3]<0} or increasing curve \eqn{\theta[3]>0}. The default is "auto" 
-#' which indicates that the trend of the curve is automatically determined by
-#' data. The option "decreasing" will impose a restriction \eqn{\theta[3]<=0} 
-#' while the option "increasing" will impose a restriction \eqn{\theta[3]>=0} in an 
-#' optimization process.
+#' \eqn{\theta[3]<0} or increasing curve \eqn{\theta[3]>0}. The default is 
+#' "auto" which indicates that the trend of the curve is automatically 
+#' determined by data. The option "decreasing" will impose a restriction
+#' \eqn{\theta[3]<=0} while the option "increasing" will impose a restriction
+#' \eqn{\theta[3]>=0} in an optimization process.
 #' @param method.init Method of obtaining initial values of the parameters.
 #' If this parameter is left unassigned, a default "Mead" method will be used.
 #' Assign "logistic" to use the logistic method.
 #' @param method.optim Method of optimization of the loss function specified by
-#' \code{method.robust}. This function argument is directly passed to the function
-#' \code{\link[stats]{constrOptim}} which is provided in the \pkg{base} package of R.
-#' @param method.robust Parameter to select loss function for the robust estimation 
-#' method to be used to fit a model. The argument NULL indicates the sum of squares
-#' loss, "absolute" indicates the absolute deviation loss, "Huber" indicates Huber's
-#' loss and "Tukey" indicates Tukey's biweight loss.
+#' \code{method.robust}. This function argument is directly passed to the 
+#' function \code{\link[stats]{constrOptim}} which is provided in the 
+#' \pkg{base} package of R.
+#' @param method.robust Parameter to select loss function for the robust 
+#' estimation method to be used to fit a model. The argument NULL indicates the
+#' sum of squares loss, "absolute" indicates the absolute deviation loss, 
+#' "Huber" indicates Huber's loss and "Tukey" indicates Tukey's biweight loss.
 #' @param use.Hessian Indicator of whether the Hessian matrix (TRUE) or the
 #' gradient vector is used in the Hill bounds.
 #' @param level Confidence level to be used in Hill bounds computation.
-#' @param failure.message Indicator of whether a message indicating attainment of
-#' the Hill bounds and possible resolutions will be printed to the console (TRUE)
-#' or hidden (FALSE).
-#' @param upperl a numeric value to impose a upper limit on \eqn{\theta[1]} estimate.
-#' @param lowerl a numeric value to impose a lower limit on \eqn{\theta[4]} estimate.
+#' @param failure.message Indicator of whether a message indicating attainment
+#' of the Hill bounds and possible resolutions will be printed to the console 
+#' (TRUE) or hidden (FALSE).
+#' @param upperl a numeric vector of length 4 to impose a upper limit 
+#' on \eqn{c(\theta[1],\theta[2],\theta[3],\theta[4])} estimates. For no upper
+#' bound limit on a theta value specify Inf
+#' @param lowerl a numeric vector of length 4 to impose a lower limit 
+#' on \eqn{c(\theta[1],\theta[2],\theta[3],\theta[4])} estimates. For no lower
+#' bound limit on a theta value specify -Inf
 #' @param ... Further arguments to be passed to \code{constrOptim}.
 #' 
 #' @return A 'dr4pl' object for which "confint", "gof", "print" and "summary"
@@ -246,18 +251,33 @@ dr4pl.default <- function(dose,
     
     stop("The same numbers of dose and response values should be supplied.")
   }
-  if(!is.element(method.init, types.method.init)) {
-    
-    stop("The initialization method name should be one of \"logistic\" and \"Mead\".")
+  #allow parcial matching method.init
+  grep.var <- grep(pattern = method.init, x = types.method.init, ignore.case = T)
+  if(length(grep.var)==1){
+    method.init <- types.method.init[grep.var]
+  } else {
+    stop(paste(sep = "","method.init: \"",method.init,"\" is not specific enough. \n
+               The initialization method name should be one of \"logistic\" and \"Mead\"."))
   }
-  if(!is.element(method.optim, types.method.optim)) {
-    
-    stop("The optimization method name should be one of \"Nelder-Mead\", \"BFGS\",
-         \"CG\", \"L-BFGS-B\" and \"SANN\".")
+  
+  #allow parcial matching method.optim
+  grep.var <- grep(pattern = method.optim, x = types.method.optim, ignore.case = T)
+  if(length(grep.var)==1){
+    method.optim <- types.method.optim[grep.var]
+  } else {
+    stop(paste(sep = "","method.optim: \"",method.optim,"\" is not specific enough. \n
+               The optimization method name should be one of \"Nelder-Mead\", \"BFGS\",
+               \"CG\", \"L-BFGS-B\" and \"SANN\"."))
   }
-  if(!is.element(trend, types.trend)) {
-    
-    stop("The type of the \"trend\" parameter should be one of \"auto\", \"decreasing\" and \"increasing\".")
+  
+  #allow parcial matching trend
+  grep.var <- grep(pattern = trend, x = types.trend, ignore.case = T)
+  if(length(grep.var)==1){
+    trend <- types.trend[grep.var]
+  } else {
+    stop(paste(sep = "","trend: \"",trend,"\" is not specific enough. \n
+               The type of the \"trend\" parameter should be one of \"auto\", 
+               \"decreasing\" and \"increasing\"."))
   }
 
   # Fit a 4PL model
@@ -375,26 +395,30 @@ dr4pl.default <- function(dose,
 #' @param init.parm a numeric vector of initial parameters of the 4PL model 
 #' supplied by a user.
 #' @param trend Indicator of whether a dose-response curve is a decreasing 
-#' \eqn{\theta[3]<0} or increasing curve \eqn{\theta[3]>0}. The default is "auto" 
-#' which indicates that the trend of the curve is automatically determined by
-#' data. The option "decreasing" will impose a restriction \eqn{\theta[3]<=0} 
-#' while the option "increasing" will impose a restriction \eqn{\theta[3]>=0} in an 
-#' optimization process.
+#' \eqn{\theta[3]<0} or increasing curve \eqn{\theta[3]>0}. The default is 
+#' "auto" which indicates that the trend of the curve is automatically 
+#' determined by data. The option "decreasing" will impose a restriction
+#' \eqn{\theta[3]<=0} while the option "increasing" will impose a restriction
+#' \eqn{\theta[3]>=0} in an optimization process.
 #' @param method.init Method of obtaining initial values of the parameters.
 #' Should be one of "logistic" for the logistic method or "Mead" for the Mead
 #' method. The default option is the Mead method.
-#' @param method.robust Parameter to select loss function for the robust estimation 
-#' method to be used to fit a model. The argument NULL indicates the sum of squares
-#' loss, "absolute" indicates the absolute deviation loss, "Huber" indicates Huber's
-#' loss and "Tukey" indicates Tukey's biweight loss.
+#' @param method.robust Parameter to select loss function for the robust 
+#' estimation method to be used to fit a model. The argument NULL indicates the
+#' sum of squares loss, "absolute" indicates the absolute deviation loss, 
+#' "Huber" indicates Huber's loss and "Tukey" indicates Tukey's biweight loss.
 #' @param method.optim Method of optimization of the parameters. This argument
 #' is directly delivered to the \code{constrOptim} function provided in the
 #' "base" package of R.
 #' @param use.Hessian Indicator of whether the Hessian matrix (TRUE) or the
 #' gradient vector is used in the Hill bounds.
 #' @param level Confidence level to be used in Hill bounds computation.
-#' @param upperl a numeric value to impose a upper limit on \eqn{\theta[1]} estimate.
-#' @param lowerl a numeric value to impose a lower limit on \eqn{\theta[4]} estimate.
+#' @param upperl a numeric vector of length 4 to impose a upper limit 
+#' on \eqn{c(\theta[1],\theta[2],\theta[3],\theta[4])} estimates. For no upper
+#' bound limit on a theta value specify Inf
+#' @param lowerl a numeric vector of length 4 to impose a lower limit 
+#' on \eqn{c(\theta[1],\theta[2],\theta[3],\theta[4])} estimates. For no lower
+#' bound limit on a theta value specify Inf
 #' 
 #' @return List of final parameter estimates, name of robust estimation, loss value
 #' and so on.
@@ -458,13 +482,49 @@ dr4plEst <- function(dose, response,
         stop("upperl must be greater than lowerl")
       }
     }
-    if(!is.null(upperl)&&is.numeric(upperl)){
-      constr.mat <- rbind(constr.mat, matrix(c(1, 0, 0, 0), nrow = 1, ncol = 4))
-      constr.vec <- c(constr.vec, upperl)
-    }
-    if(!is.null(lowerl)&&is.numeric(lowerl)){
-      constr.mat <- rbind(constr.mat, matrix(c(0, 0, 0, 1), nrow = 1, ncol = 4))
-      constr.vec <- c(constr.vec, lowerl)
+    if(!is.null(upperl)){
+      if(is.numeric(upperl)&&(length(upperl)==4)) {
+        if(!is.infinite(upperl[1])){
+          constr.mat <- rbind(constr.mat, matrix(c(-1, 0, 0, 0), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, -1*upperl[1])
+        }
+        if(!is.infinite(upperl[2])){
+          constr.mat <- rbind(constr.mat, matrix(c(0, -1, 0, 0), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, -1*upperl[2])
+        }
+        if(!is.infinite(upperl[3])){
+          constr.mat <- rbind(constr.mat, matrix(c(0, 0, -1, 0), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, -1*upperl[3])
+        }
+        if(!is.infinite(upperl[4])){
+          constr.mat <- rbind(constr.mat, matrix(c(0, 0, 0, -1), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, -1*upperl[4])
+        }
+      } else {
+        stop("upperl must either be a numeric vector of length 4 or NULL")
+      }
+    } 
+    if(!is.null(lowerl)){
+      if(is.numeric(lowerl)&&(length(lowerl)==4)){
+        if(!is.infinite(lowerl[1])){
+          constr.mat <- rbind(constr.mat, matrix(c(1, 0, 0, 0), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, lowerl[1])
+        }
+        if(!is.infinite(lowerl[2])){
+          constr.mat <- rbind(constr.mat, matrix(c(0, 1, 0, 0), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, lowerl[2])
+        }
+        if(!is.infinite(lowerl[3])){
+          constr.mat <- rbind(constr.mat, matrix(c(0, 0, 1, 0), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, lowerl[3])
+        }
+        if(!is.infinite(lowerl[4])){
+          constr.mat <- rbind(constr.mat, matrix(c(0, 0, 0, 1), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, lowerl[4])
+        }
+      } else {
+        stop("lowerl must either be a numeric vector of length 4 or NULL")
+      }
     }
     
     # Fit a 4PL model to data
@@ -522,14 +582,50 @@ dr4plEst <- function(dose, response,
         stop("upperl must be greater than lowerl")
       }
     }
-    if(!is.null(upperl)&&is.numeric(upperl)){
-      constr.mat <- rbind(constr.mat, matrix(c(1, 0, 0, 0), nrow = 1, ncol = 4))
-      constr.vec <- c(constr.vec, upperl)
-    }
-    if(!is.null(lowerl)&&is.numeric(lowerl)){
-      constr.mat <- rbind(constr.mat, matrix(c(0, 0, 0, 1), nrow = 1, ncol = 4))
-      constr.vec <- c(constr.vec, lowerl)
-    }
+    if(!is.null(upperl)){
+      if(is.numeric(upperl)&&(length(upperl)==4)) {
+        if(!is.infinite(upperl[1])){
+          constr.mat <- rbind(constr.mat, matrix(c(-1, 0, 0, 0), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, -1*upperl[1])
+        }
+        if(!is.infinite(upperl[2])){
+          constr.mat <- rbind(constr.mat, matrix(c(0, -1, 0, 0), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, -1*upperl[2])
+        }
+        if(!is.infinite(upperl[3])){
+          constr.mat <- rbind(constr.mat, matrix(c(0, 0, -1, 0), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, -1*upperl[3])
+        }
+        if(!is.infinite(upperl[4])){
+          constr.mat <- rbind(constr.mat, matrix(c(0, 0, 0, -1), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, -1*upperl[4])
+        }
+      } else {
+        stop("upperl must either be a numeric vector of length 4 or NULL")
+      }
+    } 
+    if(!is.null(lowerl)){
+      if(is.numeric(lowerl)&&(length(lowerl)==4)){
+        if(!is.infinite(lowerl[1])){
+          constr.mat <- rbind(constr.mat, matrix(c(1, 0, 0, 0), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, lowerl[1])
+        }
+        if(!is.infinite(lowerl[2])){
+          constr.mat <- rbind(constr.mat, matrix(c(0, 1, 0, 0), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, lowerl[2])
+        }
+        if(!is.infinite(lowerl[3])){
+          constr.mat <- rbind(constr.mat, matrix(c(0, 0, 1, 0), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, lowerl[3])
+        }
+        if(!is.infinite(lowerl[4])){
+          constr.mat <- rbind(constr.mat, matrix(c(0, 0, 0, 1), nrow = 1, ncol = 4))
+          constr.vec <- c(constr.vec, lowerl[4])
+        }
+      } else {
+        stop("lowerl must either be a numeric vector of length 4 or NULL")
+      }
+    } 
     
     if(any(constr.mat%*%retheta.init<constr.vec)) {
       
