@@ -45,9 +45,10 @@ dr4pl <- function(...)  UseMethod("dr4pl")
 #' function \code{\link[stats]{constrOptim}} which is provided in the 
 #' \pkg{base} package of R.
 #' @param method.robust Parameter to select loss function for the robust 
-#' estimation method to be used to fit a model. The argument NULL indicates the
-#' sum of squares loss, "absolute" indicates the absolute deviation loss, 
-#' "Huber" indicates Huber's loss and "Tukey" indicates Tukey's biweight loss.
+#' estimation method to be used to fit a model. The default argument "squared"
+#' indicates the sum of squares loss, "absolute" indicates the absolute 
+#' deviation loss, "Huber" indicates Huber's loss and "Tukey" indicates
+#' Tukey's biweight loss.
 #' @param use.Hessian Indicator of whether the Hessian matrix (TRUE) or the
 #' gradient vector is used in the Hill bounds.
 #' @param level Confidence level to be used in Hill bounds computation.
@@ -99,7 +100,7 @@ dr4pl.formula <- function(formula,
                           init.parm = NULL,
                           trend = "auto",
                           method.init = "Mead",
-                          method.robust = NULL,
+                          method.robust = "squared",
                           method.optim = "Nelder-Mead",
                           use.Hessian = FALSE,
                           level = 0.9999,
@@ -152,7 +153,7 @@ dr4pl.data.frame <- function(data,
                           init.parm = NULL,
                           trend = "auto",
                           method.init = "Mead",
-                          method.robust = NULL,
+                          method.robust = "squared",
                           method.optim = "Nelder-Mead",
                           use.Hessian = FALSE,
                           level = 0.9999,
@@ -225,7 +226,7 @@ dr4pl.default <- function(dose,
                           init.parm = NULL,
                           trend = "auto",
                           method.init = "Mead",
-                          method.robust = NULL,
+                          method.robust = "squared",
                           method.optim = "Nelder-Mead",
                           use.Hessian = FALSE,
                           level = 0.9999,
@@ -236,6 +237,7 @@ dr4pl.default <- function(dose,
   
   types.trend <- c("auto", "decreasing", "increasing")
   types.method.init <- c("logistic", "Mead")
+  types.method.robust <- c("squared","absolute", "Huber", "Tukey")
   types.method.optim <- c("Nelder-Mead", "BFGS", "CG", "SANN")
   
   ### Check errors in functions arguments
@@ -258,6 +260,16 @@ dr4pl.default <- function(dose,
   } else {
     stop(paste(sep = "","method.init: \"",method.init,"\" is not specific enough. \n
                The initialization method name should be one of \"logistic\" and \"Mead\"."))
+  }
+  
+  #allow parcial matching method.robust
+  grep.var <- grep(pattern = method.robust, x = types.method.robust, ignore.case = T)
+  if(length(grep.var)==1){
+    method.robust <- types.method.robust[grep.var]
+  } else {
+    stop(paste(sep = "","method.robust: \"",method.robust,"\" is not specific enough. \n
+               The robust estimation method should be one of \"squared\", \"absolute\",
+               \"Huber\" or \"Tukey\"."))
   }
   
   #allow parcial matching method.optim
@@ -297,7 +309,7 @@ dr4pl.default <- function(dose,
   class(obj) <- "dr4pl"
   
   # If any robust estimation method is indicated, report outliers to a user.
-  if(!is.null(method.robust)) {
+  if(!method.robust=="squared") {
     
     theta <- obj$parameters  # Robust parameter estimates
     residuals <- Residual(theta, dose, response)  # Residuals
@@ -315,7 +327,7 @@ dr4pl.default <- function(dose,
 
     ## Decide the method of robust estimation which is more robust than the method
     ## input by a user.
-    if(is.null(method.robust)) {
+    if(method.robust=="squared") {
       
       method.robust.new <- "absolute"
     } else if(is.element(method.robust, c("absolute", "Huber"))) {
@@ -661,7 +673,7 @@ dr4plEst <- function(dose, response,
   data.dr4pl <- data.frame(Dose = dose, Response = response)
 
   name.robust <- method.robust
-  if(is.null(method.robust)) {
+  if(method.robust=="squared") {
     
     name.robust <- "squared"
   }
