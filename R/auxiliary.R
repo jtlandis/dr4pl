@@ -375,9 +375,12 @@ plot.dr4pl <- function(x, ...,
   w <- which(class.args=="dr4pl")
   dr4pl.list <- vector("list",length(w)+1)
   dr4pl.list[[1]] <- x
-  for(i in 1:length(w)){
-    dr4pl.list[[i+1]] <- args[[w[i]]]
+  if(length(args)>0){
+    for(i in 1:length(w)){
+      dr4pl.list[[i+1]] <- args[[w[i]]]
+    }
   }
+  
   
   #handle labels for each dr4pl.list
   n <- length(dr4pl.list)
@@ -405,9 +408,11 @@ plot.dr4pl <- function(x, ...,
     shape.default <- FALSE
   }
   
-  if(length(shape!=n)) {
+  if(length(shape)!=n) {
     warning("Shape argument does not mach number of dr4pl objects. Repeating shape entries. \n")
     shape.vec <- rep(shape,n)
+  } else {
+    shape.vec <- shape
   }
   a <- ggplot(NULL, aes(x = Dose, y = Response)) 
   for(i in 1:n) {
@@ -415,8 +420,11 @@ plot.dr4pl <- function(x, ...,
     if(class(dr4pl.obj)=="dr4pl") {
       if(!is.null(indices.outlier)) {
         shapes <- rep("fitted",nrow(dr4pl.obj$data))
-        if("dr4pl.robust"%in%(names(dr4pl.obj))) {
+        if("dr4pl.robust"%in%(names(dr4pl.obj))) { #if dr4pl.obj is passed by user
           idx.outlier <- dr4pl.obj$dr4pl.robust$idx.outlier
+          shapes[idx.outlier] <- "outlier"
+        } else if("idx.outlier"%in%(names(dr4pl.obj))){ # dr4pl.obj may be a robust plot and plot was called by dr4pl function
+          idx.outlier <- dr4pl.obj$idx.outlier
           shapes[idx.outlier] <- "outlier"
         } else if(indices.outlier%in%c("report")){ # this else statement may be not needed. outliers may be found iff dr4pl.robust exsists
           residuals <- (dr4pl.obj$data$Response - MeanResponse(dr4pl.obj$data$Dose,dr4pl.obj$parameters))
@@ -469,7 +477,7 @@ plot.dr4pl <- function(x, ...,
   a <- a + ggplot2::theme(axis.title.y = ggplot2::element_text(size = 16, margin = ggplot2::margin(0, 15, 0, 0)))
   a <- a + ggplot2::theme(axis.text.x = ggplot2::element_text(size = 16))
   a <- a + ggplot2::theme(axis.text.y = ggplot2::element_text(size = 16)) 
-  if(shape.default) {
+  if(!shape.default) {
     a <- a + guides(shape = FALSE)
   }
   

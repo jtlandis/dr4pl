@@ -161,8 +161,8 @@ dr4pl.data.frame <- function(data,
                           upperl = NULL,
                           lowerl = NULL,
                           ...) {
-  dose <- data[,deparse(substitute(dose))]
-  response <- data[,deparse(substitute(response))]
+  dose <- eval(substitute(dose),data)
+  response <- eval(substitute(response),data)
   obj <- dr4pl.default(dose = dose,
                        response = response,
                        init.parm = init.parm,
@@ -317,7 +317,7 @@ dr4pl.default <- function(dose,
     indices.outlier <- OutlierDetection(residuals)
     
     obj$idx.outlier <- indices.outlier
-    obj$robust.plot <- plot(obj, indices.outlier = indices.outlier)
+    obj$robust.plot <- plot(obj, indices.outlier = "report", labels = "Robust Plot", color.vec = "blue")
   }
   
   message.diagnosis <- NULL
@@ -361,17 +361,16 @@ dr4pl.default <- function(dose,
     indices.outlier <- OutlierDetection(residuals)
     
     obj.robust$idx.outlier <- indices.outlier
-    obj.robust$robust.plot <- plot(obj.robust, indices.outlier = indices.outlier)
+    obj.robust$robust.plot <- plot(obj.robust, indices.outlier = "report", labels = "Robust Plot", color.vec = "blue")
 
     ## Print different messages to the console depending on the convergence success
     ## of a robust fit.
     if(obj.robust$convergence) {
       
-      message.diagnosis <- 
-      paste("The Hill bounds have been hit during optimization, but other robust ",
-            "estimation was succesful.\n",
-            "Please refer to \"dr4pl.robust\" variable for diagnosis.\n",
-            sep = "")
+      message.diagnosis <- paste("The Hill bounds have been hit during optimization, but other robust ",
+                                 "estimation was succesful.\n",
+                                 "Please refer to \"dr4pl.robust\" variable for diagnosis.\n",
+                                 sep = "")
     } else {
       
       message.diagnosis <- 
