@@ -265,6 +265,8 @@ IC <- function(object, inhib.percent) {
 #' @name plot.dr4pl
 #' 
 #' @param x `dr4pl' object whose data and mean response function will be plotted.
+#' @param ... additional `dr4pl' objects to be plotted. Additional dr4pl
+#' objects are differentiated by color.
 #' @param type.curve Indicator of the type of a dose-response curve. "all" indicates
 #' that data and a curve will be plotted while "data" indicates that only data
 #' will be plotted.
@@ -274,11 +276,19 @@ IC <- function(object, inhib.percent) {
 #'   "Dose".
 #' @param text.y Character string for the y-axis of the plot with a default set to 
 #'   "Response".
-#' @param indices.outlier Pass a vector indicating all indices which are outliers in 
-#'   the data.
+#' @param indices.outlier Toggles if suspected outliers should be indicated if any.
+#' Default argument set to NULL, allowing user to use shape argument. Setting
+#' argument to "report" overides shape argument to default "fitted" and any
+#' suspected outliers are labeled as "outlier".
 #' @param breaks.x Vector of desired break points for the x-axis
 #' @param breaks.y Vector of desired break points for the y-axis
-#' @param ... All arguments that can normally be passed to ggplot.
+#' @param shape Vector name used to group dr4pl objects by shape. Default set to "fitted"
+#' and are plotted as circles while suspected outliers are plotted as triangles. Legend
+#' for shape does not plot if shape is coerced to default. shape may be faceted
+#' @param color.vec Character string to indicate color of points. Set to NULL to use
+#' default ggplot color pallete
+#' @param labels Character vector to label names of the colored dr4pl points
+#' passed to plot. When faceted by color, use labels.
 #' 
 #' @examples
 #' \dontrun{
@@ -315,6 +325,11 @@ IC <- function(object, inhib.percent) {
 #'      text.title = "hpc Decontaminants Plot",
 #'      text.x = "Concentration",
 #'      text.y = "Count")
+#'
+#' dr4pl.1 <- dr4pl(Response ~ Dose, data = sample_data_1)
+#' dr4pl.2 <- dr4pl(Response ~ Dose, data = sample_data_2)
+#' plot(dr4pl.1,dr4pl.2)
+#' plot(dr4pl.1,dr4pl.2, labels = c("group1","group2")) + facet_wrap(~labels)
 #' }
 #' 
 #' @author Hyowon An, \email{ahwbest@gmail.com}
@@ -322,7 +337,7 @@ IC <- function(object, inhib.percent) {
 #' @author Aubrey G. Bailey, \email{aubreybailey@gmail.com}
 #' 
 #' @export
-plot.dr4pl <- function(x,
+plot.dr4pl <- function(x, ...,
                        type.curve = "all",
                        text.title = "Dose-response plot",
                        text.x = "Dose",
@@ -330,79 +345,160 @@ plot.dr4pl <- function(x,
                        indices.outlier = NULL,
                        breaks.x = NULL,
                        breaks.y = NULL,
-                       ...) {
+                       shape = "fitted",
+                       color.vec = NULL, 
+                       labels = NULL
+) {
   
-  ### Check whether function arguments are appropriate
+  #checking arguments are passed correctly
   if(!is.character(text.title)) {
-    
     stop("Title text should be characters.")
   }
   if(!is.character(text.x)) {
-    
     stop("The x-axis label text should be characters.")
   }
   if(!is.character(text.y)) {
-    
     stop("The y-axis label text should be characters.")
   }
-  
-  ### Draw a plot
-  n <- x$sample.size
-  color.vec <- rep("blue", n)
-  shape.vec <- rep(19, n)
-  
+  if(!type.curve %in% c("all","data")) {
+    stop("type.curve should be assigned either \"all\" or \"data\"")
+  }
   if(!is.null(indices.outlier)) {
-    
-    color.vec[indices.outlier] <- "red"
-    shape.vec[indices.outlier] <- 17
+    if(!indices.outlier %in% c("report")) {
+      stop("indices.outlier must be either NULL or \"report\"")
+    }
   }
   
-  a <- ggplot2::ggplot(aes(x = x$data$Dose, y = x$data$Response), data = x$data)
-  
-  if(type.curve == "all") {
-    
-    a <- a + ggplot2::stat_function(fun = MeanResponse,
-                                    args = list(theta = x$parameters),
-                                    size = 1.2)
+  #make dr4pl.list object
+  args <- list(...)
+  class.args <- unlist(lapply(args,class))
+  w <- which(class.args=="dr4pl")
+  dr4pl.list <- vector("list",length(w)+1)
+  dr4pl.list[[1]] <- x
+  for(i in 1:length(w)){
+    dr4pl.list[[i+1]] <- args[[w[i]]]
   }
   
-  a <- a + ggplot2::geom_point(size = I(5), alpha = I(0.8), color = color.vec,
-                               shape = shape.vec)
+  #handle labels for each dr4pl.list
+  n <- length(dr4pl.list)
+  if(is.null(labels)) {
+    warning("labels not specified. Generating generic labels.")
+    labels.vec <- paste("dr4pl_",1:n,sep = "")
+  } else {
+    if((length(labels)!=length(unique(labels)))||(n!=length(labels))){
+      if(length(labels)!=length(unique(labels))) {
+        warning("Duplicated labels passed. Generating unique labels")
+        labels.vec <- index.duplicated(labels)
+      }
+      if(n!=length(labels)) {
+        warning("length of labels does not match number of detected dr4pl objects. Generating generic labels.")
+        labels.vec <- paste("dr4pl_",1:n,sep = "")
+      }
+    } else {
+      labels.vec <- labels
+    }
+  }
   
-  a <- a + ggplot2::labs(title = text.title,
-                         x = text.x,
-                         y = text.y)
+  if(length(shape)==1&&shape=="fitted"&&!is.null(indices.outlier)){
+    shape.default <- TRUE
+  } else {
+    shape.default <- FALSE
+  }
   
-  # Set parameters for the grids
+  if(length(shape!=n)) {
+    warning("Shape argument does not mach number of dr4pl objects. Repeating shape entries. \n")
+    shape.vec <- rep(shape,n)
+  }
+  a <- ggplot(NULL, aes(x = Dose, y = Response)) 
+  for(i in 1:n) {
+    dr4pl.obj <- dr4pl.list[[i]]
+    if(class(dr4pl.obj)=="dr4pl") {
+      if(!is.null(indices.outlier)) {
+        shapes <- rep("fitted",nrow(dr4pl.obj$data))
+        if("dr4pl.robust"%in%(names(dr4pl.obj))) {
+          idx.outlier <- dr4pl.obj$dr4pl.robust$idx.outlier
+          shapes[idx.outlier] <- "outlier"
+        } else if(indices.outlier%in%c("report")){ # this else statement may be not needed. outliers may be found iff dr4pl.robust exsists
+          residuals <- (dr4pl.obj$data$Response - MeanResponse(dr4pl.obj$data$Dose,dr4pl.obj$parameters))
+          idx.outlier <- OutlierDetection(residuals)
+          shapes[idx.outlier] <- "outlier"
+        }
+        dr4pl.obj$data$shape <- as.factor(shapes)
+      } else {
+        dr4pl.obj$data$shape <- as.factor(rep(shape.vec[i],nrow(dr4pl.obj$data)))
+      }
+      dr4pl.obj$data$labels <- as.factor(labels.vec[i])
+      a <- a + geom_point(data =dr4pl.obj$data, size = 5, alpha = .8, aes(color = labels, shape = shape))
+      if(type.curve=="all") {
+        a <- a + stat_function(data = dr4pl.obj$data,fun = MeanResponse, args = list(theta = dr4pl.obj$parameters),size = 1.2)
+      }
+    }
+  }
   a <- a + ggplot2::theme(strip.text.x = ggplot2::element_text(size = 16))
   a <- a + ggplot2::theme(panel.grid.minor = ggplot2::element_blank())
   a <- a + ggplot2::theme(panel.grid.major = ggplot2::element_blank())
   
+  if(!is.null(color.vec)) {
+    a <- a + scale_color_manual(name="labels", values = color.vec)
+    a <- a +  labs(title = text.title,
+                   shape = "shape",
+                   x = text.x,
+                   y = text.y)
+  } else {
+    a <- a +  labs(title = text.title,
+                   color = "labels",
+                   shape = "shape",
+                   x = text.x,
+                   y = text.y)
+  }
+  # 
   if(!is.null(breaks.x)) { 
-    
     a <- a + ggplot2::scale_x_log10(breaks = breaks.x)
-  } else { 
-    
+  } else {    
     a <- a + ggplot2::scale_x_log10()
   }
   if(!is.null(breaks.y)) {
-    
     a <- a + ggplot2::scale_y_continuous(breaks = breaks.y)
-  } else { 
-    
-    a <- a + ggplot2:: scale_y_continuous()
+  } else {
+    a <- a + ggplot2::scale_y_continuous()
   }
-  
-  a <- a + ggplot2::theme_bw()
-  # Test
+  a <- a +  theme_bw()
   # Set parameters for the titles and text / margin(top, right, bottom, left)
   a <- a + ggplot2::theme(plot.title = ggplot2::element_text(size = 20, margin = ggplot2::margin(0, 0, 10, 0)))
   a <- a + ggplot2::theme(axis.title.x = ggplot2::element_text(size = 16, margin = ggplot2::margin(15, 0, 0, 0)))
   a <- a + ggplot2::theme(axis.title.y = ggplot2::element_text(size = 16, margin = ggplot2::margin(0, 15, 0, 0)))
   a <- a + ggplot2::theme(axis.text.x = ggplot2::element_text(size = 16))
-  a <- a + ggplot2::theme(axis.text.y = ggplot2::element_text(size = 16))
+  a <- a + ggplot2::theme(axis.text.y = ggplot2::element_text(size = 16)) 
+  if(shape.default) {
+    a <- a + guides(shape = FALSE)
+  }
   
   return(a)
+}
+
+
+#' @title rename duplicated strings
+#' 
+#' @description apply index suffix to duplicated strings till all
+#' entries are unique.
+#'   
+#' @name index.duplicated
+#' 
+#' @param x character vector where some entries are duplicated
+#' 
+#' @return character vector of unique entries
+#' 
+#' @author Justin T. Landis, \email{jtlandis314@gmail.com}
+index.duplicated <- function(x) {
+  dup <- duplicated(x)
+  x[dup] <- paste(x[dup],"_1",sep = "")
+  i <- 1
+  while(any(duplicated(x))) {
+    dup <- duplicated(x)
+    x[dup] <- gsub(pattern = i, replacement = i+1, x[dup])
+    i <- i + 1
+  }
+  return(x)
 }
 
 #' Print the dr4pl object to screen.
