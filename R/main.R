@@ -253,7 +253,7 @@ dr4pl.default <- function(dose,
     
     stop("The same numbers of dose and response values should be supplied.")
   }
-  #allow parcial matching method.init
+  #allow partial matching method.init
   grep.var <- grep(pattern = method.init, x = types.method.init, ignore.case = T)
   if(length(grep.var)==1){
     method.init <- types.method.init[grep.var]
@@ -262,7 +262,7 @@ dr4pl.default <- function(dose,
                The initialization method name should be one of \"logistic\" and \"Mead\"."))
   }
   
-  #allow parcial matching method.robust
+  #allow partial matching method.robust
   grep.var <- grep(pattern = method.robust, x = types.method.robust, ignore.case = T)
   if(length(grep.var)==1){
     method.robust <- types.method.robust[grep.var]
@@ -272,7 +272,7 @@ dr4pl.default <- function(dose,
                \"Huber\" or \"Tukey\"."))
   }
   
-  #allow parcial matching method.optim
+  #allow partial matching method.optim
   grep.var <- grep(pattern = method.optim, x = types.method.optim, ignore.case = T)
   if(length(grep.var)==1){
     method.optim <- types.method.optim[grep.var]
@@ -282,7 +282,7 @@ dr4pl.default <- function(dose,
                \"CG\", \"L-BFGS-B\" and \"SANN\"."))
   }
   
-  #allow parcial matching trend
+  #allow partial matching trend
   grep.var <- grep(pattern = trend, x = types.trend, ignore.case = T)
   if(length(grep.var)==1){
     trend <- types.trend[grep.var]
