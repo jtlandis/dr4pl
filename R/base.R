@@ -165,7 +165,7 @@ TukeyBiweightLoss <- function(r) {
 ErrFcn <- function(method.robust) {
 
   ### Check whether function arguments are appropriate.
-  if(!(is.null(method.robust)||method.robust == "absolute"||method.robust == "Huber"||
+  if(!(method.robust=="squared"||method.robust == "absolute"||method.robust == "Huber"||
      method.robust == "Tukey")) {
     
     stop("The robust estimation method should be one of NULL, \"absolute\",
@@ -174,7 +174,7 @@ ErrFcn <- function(method.robust) {
   
   loss.fcn <- c()
 
-  if(is.null(method.robust)) {
+  if(method.robust=="squared") {
     loss.fcn <- SquaredLoss
   } else if(method.robust == "absolute") {
     loss.fcn <- AbsoluteLoss
