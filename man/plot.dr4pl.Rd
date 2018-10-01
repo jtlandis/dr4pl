@@ -4,12 +4,16 @@
 \alias{plot.dr4pl}
 \title{Make a plot of a 4PL model curve and data}
 \usage{
-\method{plot}{dr4pl}(x, type.curve = "all",
+\method{plot}{dr4pl}(x, ..., type.curve = "all",
   text.title = "Dose-response plot", text.x = "Dose", text.y = "Response",
-  indices.outlier = NULL, breaks.x = NULL, breaks.y = NULL, ...)
+  indices.outlier = NULL, breaks.x = NULL, breaks.y = NULL,
+  shape = "fitted", color.vec = NULL, labels = NULL)
 }
 \arguments{
 \item{x}{`dr4pl' object whose data and mean response function will be plotted.}
+
+\item{...}{additional `dr4pl' objects to be plotted. Additional dr4pl
+objects are differentiated by color.}
 
 \item{type.curve}{Indicator of the type of a dose-response curve. "all" indicates
 that data and a curve will be plotted while "data" indicates that only data
@@ -24,14 +28,24 @@ will be plotted.}
 \item{text.y}{Character string for the y-axis of the plot with a default set to 
 "Response".}
 
-\item{indices.outlier}{Pass a vector indicating all indices which are outliers in 
-the data.}
+\item{indices.outlier}{Toggles if suspected outliers should be indicated if any.
+Default argument set to NULL, allowing user to use shape argument. Setting
+argument to "report" overides shape argument to default "fitted" and any
+suspected outliers are labeled as "outlier".}
 
 \item{breaks.x}{Vector of desired break points for the x-axis}
 
 \item{breaks.y}{Vector of desired break points for the y-axis}
 
-\item{...}{All arguments that can normally be passed to ggplot.}
+\item{shape}{Vector name used to group dr4pl objects by shape. Default set to "fitted"
+and are plotted as circles while suspected outliers are plotted as triangles. Legend
+for shape does not plot if shape is coerced to default. shape may be faceted}
+
+\item{color.vec}{Character string to indicate color of points. Set to NULL to use
+default ggplot color pallete}
+
+\item{labels}{Character vector to label names of the colored dr4pl points
+passed to plot. When faceted by color, use labels.}
 }
 \description{
 This function displays a dose-response curve and data. As a default,
@@ -40,6 +54,7 @@ responses. The black solid line represents a dose-response curve. The blue fille
 circles represent data points and red triangles represent outliers.
 }
 \examples{
+\dontrun{
 dr4pl.1 <- dr4pl(Response ~ Dose, data = sample_data_1)
 
 plot(dr4pl.1)
@@ -73,6 +88,12 @@ plot(dr4pl.hpc,
      text.title = "hpc Decontaminants Plot",
      text.x = "Concentration",
      text.y = "Count")
+
+dr4pl.1 <- dr4pl(Response ~ Dose, data = sample_data_1)
+dr4pl.2 <- dr4pl(Response ~ Dose, data = sample_data_2)
+plot(dr4pl.1,dr4pl.2)
+plot(dr4pl.1,dr4pl.2, labels = c("group1","group2")) + facet_wrap(~labels)
+}
 
 }
 \author{
