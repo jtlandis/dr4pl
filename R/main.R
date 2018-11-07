@@ -471,7 +471,7 @@ dr4plEst <- function(dose, response,
     
     names(retheta.init) <- c("Upper limit", "Log10(IC50)", "Slope", "Lower limit")
     if(init.parm[1]<init.parm[4]) {
-      stop(paste("Error: Choose init.parm such that \u03B8\u2081 is greater than \u03B8\u2084. \n Choose \u03B8\u2083 >0 for increaseing trend and \u03B8\u2083 <0 for decreasing trend. \n"))
+      stop(paste("Choose init.parm such that \u03B8\u2081 is greater than \u03B8\u2084. \n Choose \u03B8\u2083 >0 for increaseing trend and \u03B8\u2083 <0 for decreasing trend. \n"))
     }
     constr.mat <- matrix(c(1, 0, 0, -1), nrow = 1, ncol = 4)
     constr.vec <- 0
