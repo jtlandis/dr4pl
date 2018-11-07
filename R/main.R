@@ -470,7 +470,9 @@ dr4plEst <- function(dose, response,
     retheta.init[2] <- log10(init.parm[2])
     
     names(retheta.init) <- c("Upper limit", "Log10(IC50)", "Slope", "Lower limit")
-
+    if(init.parm[1]<init.parm[4]) {
+      stop(paste("Error: Choose init.parm such that \u03B8\u2081 is greater than \u03B8\u2084. \n Choose \u03B8\u2083 >0 for increaseing trend and \u03B8\u2083 <0 for decreasing trend. \n"))
+    }
     constr.mat <- matrix(c(1, 0, 0, -1), nrow = 1, ncol = 4)
     constr.vec <- 0
     
@@ -489,7 +491,7 @@ dr4plEst <- function(dose, response,
     #Impose constraints on upper limit and or lower limit
     #"upperl" and "lowerl"
     if(!is.null(upperl)&!is.null(lowerl)){
-      if(upperl<lowerl) {
+      if(any(upperl<lowerl)) {
         stop("upperl must be greater than lowerl")
       }
     }
@@ -501,7 +503,7 @@ dr4plEst <- function(dose, response,
         }
         if(!is.infinite(upperl[2])){
           constr.mat <- rbind(constr.mat, matrix(c(0, -1, 0, 0), nrow = 1, ncol = 4))
-          constr.vec <- c(constr.vec, -1*upperl[2])
+          constr.vec <- c(constr.vec, -1*log10(upperl[2]))
         }
         if(!is.infinite(upperl[3])){
           constr.mat <- rbind(constr.mat, matrix(c(0, 0, -1, 0), nrow = 1, ncol = 4))
@@ -523,7 +525,7 @@ dr4plEst <- function(dose, response,
         }
         if(!is.infinite(lowerl[2])){
           constr.mat <- rbind(constr.mat, matrix(c(0, 1, 0, 0), nrow = 1, ncol = 4))
-          constr.vec <- c(constr.vec, lowerl[2])
+          constr.vec <- c(constr.vec, log10(lowerl[2]))
         }
         if(!is.infinite(lowerl[3])){
           constr.mat <- rbind(constr.mat, matrix(c(0, 0, 1, 0), nrow = 1, ncol = 4))
@@ -601,7 +603,7 @@ dr4plEst <- function(dose, response,
         }
         if(!is.infinite(upperl[2])){
           constr.mat <- rbind(constr.mat, matrix(c(0, -1, 0, 0), nrow = 1, ncol = 4))
-          constr.vec <- c(constr.vec, -1*upperl[2])
+          constr.vec <- c(constr.vec, -1*log10(upperl[2]))
         }
         if(!is.infinite(upperl[3])){
           constr.mat <- rbind(constr.mat, matrix(c(0, 0, -1, 0), nrow = 1, ncol = 4))
@@ -623,7 +625,7 @@ dr4plEst <- function(dose, response,
         }
         if(!is.infinite(lowerl[2])){
           constr.mat <- rbind(constr.mat, matrix(c(0, 1, 0, 0), nrow = 1, ncol = 4))
-          constr.vec <- c(constr.vec, lowerl[2])
+          constr.vec <- c(constr.vec, log10(lowerl[2]))
         }
         if(!is.infinite(lowerl[3])){
           constr.mat <- rbind(constr.mat, matrix(c(0, 0, 1, 0), nrow = 1, ncol = 4))
