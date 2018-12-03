@@ -5,9 +5,10 @@
 \title{Make a plot of a 4PL model curve and data}
 \usage{
 \method{plot}{dr4pl}(x, ..., type.curve = "all",
-  text.title = "Dose-response plot", text.x = "Dose", text.y = "Response",
-  indices.outlier = NULL, breaks.x = NULL, breaks.y = NULL,
-  shape = "fitted", color.vec = NULL, labels = NULL)
+  text.title = "Dose-response plot", text.x = "Dose",
+  text.y = "Response", indices.outlier = NULL, breaks.x = NULL,
+  breaks.y = NULL, shape = "fitted", color.vec = NULL,
+  labels = NULL)
 }
 \arguments{
 \item{x}{`dr4pl' object whose data and mean response function will be plotted.}

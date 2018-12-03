@@ -76,10 +76,10 @@ class(dr4pl.robust.1)
 dr4pl.robust.1$convergence
 ```
 
-The parent object *dr4pl.error.1* and the child object *dr4pl.robust.1* have the same class *dr4pl*. Note that the child object *dr4pl.robust.1* indicates that convergence failure did not happen when robust estimation is applied. In the following diagnosis plot, outliers are denoted by red triangles.
+The parent object *dr4pl.error.1* and the child object *dr4pl.robust.1* have the same class *dr4pl*. Note that the child object *dr4pl.robust.1* indicates that convergence failure did not happen when robust estimation is applied. In the following diagnosis plot, outliers are denoted by triangles.
 
 ```{r}
-plot(dr4pl.robust.1, indices.outlier = dr4pl.robust.1$idx.outlier)
+plot(dr4pl.robust.1,indices.outlier = "report")
 ```
 
 Let's next consider the second error case **drc_error_2**.
@@ -137,6 +137,21 @@ dr4pl.error.4 <- dr4pl(Response~Dose, data = drc_error_4, method.init = "logisti
 dr4pl.error.4$convergence
 plot(dr4pl.error.4, text.title = "Error plot #4")
 ```
+
+While this is one curve that fits the data, it may not model a physical response well for biological purposes. If one was to view the summary of the dr4pl.error.4 object one would see that the IC50 is extremely high and the lower asymptote is below zero.
+
+```{r}
+summary(dr4pl.error.4)
+```
+
+The user can remedy this by imposing physical constraints on the estimated theta parameter using upperl and lowerl.
+
+```{r}
+dr4pl.error.4 <- dr4pl(Response~Dose, data = drc_error_4, method.init = "logistic", lowerl = c(-Inf,1,-Inf,-.1))
+summary(dr4pl.error.4)
+plot(dr4pl.error.4, text.title = "New Error plot #4")
+```
+
 
 The package drc draws errors with each one of these cases. However dr4pl is able generate a curve despite outliers and a support problem in each error case. In each case we were able to modify the title and axis names with *text.title*, *text.x*, or *text.y*. We are also able to bring attention to outlier points by passing a vector of the indices to the *indices.outlier* argument.
 

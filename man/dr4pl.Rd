@@ -4,7 +4,6 @@
 \name{dr4pl}
 \alias{dr4pl}
 \alias{dr4pl-package}
-\alias{dr4pl}
 \alias{dr4pl.formula}
 \alias{dr4pl.data.frame}
 \alias{dr4pl.default}
@@ -22,8 +21,8 @@ dr4pl(...)
   method.optim = "Nelder-Mead", use.Hessian = FALSE, level = 0.9999,
   failure.message = FALSE, upperl = NULL, lowerl = NULL, ...)
 
-\method{dr4pl}{default}(dose, response, init.parm = NULL, trend = "auto",
-  method.init = "Mead", method.robust = "squared",
+\method{dr4pl}{default}(dose, response, init.parm = NULL,
+  trend = "auto", method.init = "Mead", method.robust = "squared",
   method.optim = "Nelder-Mead", use.Hessian = FALSE, level = 0.9999,
   failure.message = FALSE, upperl = NULL, lowerl = NULL, ...)
 }
