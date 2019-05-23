@@ -41,7 +41,7 @@ class(dr4pl.robust.1)
 dr4pl.robust.1$convergence
 
 ## ------------------------------------------------------------------------
-plot(dr4pl.robust.1, indices.outlier = dr4pl.robust.1$idx.outlier)
+plot(dr4pl.robust.1,indices.outlier = "report")
 
 ## ------------------------------------------------------------------------
 ggplot(drc_error_2, aes(x = Dose, y = Response)) +
@@ -80,6 +80,14 @@ error = function(err) {
 dr4pl.error.4 <- dr4pl(Response~Dose, data = drc_error_4, method.init = "logistic")
 dr4pl.error.4$convergence
 plot(dr4pl.error.4, text.title = "Error plot #4")
+
+## ------------------------------------------------------------------------
+summary(dr4pl.error.4)
+
+## ------------------------------------------------------------------------
+dr4pl.error.4 <- dr4pl(Response~Dose, data = drc_error_4, method.init = "logistic", lowerl = c(-Inf,1,-Inf,-.1))
+summary(dr4pl.error.4)
+plot(dr4pl.error.4, text.title = "New Error plot #4")
 
 ## ------------------------------------------------------------------------
 dr4pl.Mead.5 <- dr4pl(Response~Dose, data = sample_data_5)

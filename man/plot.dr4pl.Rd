@@ -4,18 +4,11 @@
 \alias{plot.dr4pl}
 \title{Make a plot of a 4PL model curve and data}
 \usage{
-<<<<<<< HEAD
 \method{plot}{dr4pl}(x, ..., type.curve = "all",
   text.title = "Dose-response plot", text.x = "Dose",
   text.y = "Response", indices.outlier = NULL, breaks.x = NULL,
   breaks.y = NULL, shape = "fitted", color.vec = NULL,
   labels = NULL)
-=======
-\method{plot}{dr4pl}(x, type.curve = "all",
-  text.title = "Dose-response plot", text.x = "Dose",
-  text.y = "Response", indices.outlier = NULL, breaks.x = NULL,
-  breaks.y = NULL, ...)
->>>>>>> 7bd619d2a2f1b9cf8f702fbc767727e760225d11
 }
 \arguments{
 \item{x}{`dr4pl' object whose data and mean response function will be plotted.}
@@ -96,7 +89,6 @@ plot(dr4pl.hpc,
      text.title = "hpc Decontaminants Plot",
      text.x = "Concentration",
      text.y = "Count")
-}
 
 dr4pl.1 <- dr4pl(Response ~ Dose, data = sample_data_1)
 dr4pl.2 <- dr4pl(Response ~ Dose, data = sample_data_2)
