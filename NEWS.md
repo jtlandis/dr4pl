@@ -8,6 +8,7 @@ dr4pl function now allows 'data' argument when using 'dose' and 'response' argum
 
 # dr4pl 1.1.7
 
+<<<<<<< HEAD
 print.summary.dr4pl function no long provides t-statistics and p-values but now prints 95% confidence intervals instead.
 
 # dr4pl 1.2
@@ -17,3 +18,10 @@ upperl was added as an argument to impose upper bounds to the optimised theta pa
 lowerl was added as an argument to impose lower bounds to the optimised theta parameters
 
 plot.dr4pl now allows the user to plot multiple dr4pl objects on the same plot. see examples for more details on new arguments and use cases
+=======
+print.summary.dr4pl function no long provides t-statistics and p-values but now prints 95% confidence intervals instead. Consolidated Vignettes.
+
+# dr4pl 1.1.8
+
+Following proper semantic versioning.
+>>>>>>> 7bd619d2a2f1b9cf8f702fbc767727e760225d11

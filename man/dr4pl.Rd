@@ -22,7 +22,11 @@ dr4pl(...)
   failure.message = FALSE, upperl = NULL, lowerl = NULL, ...)
 
 \method{dr4pl}{default}(dose, response, init.parm = NULL,
+<<<<<<< HEAD
   trend = "auto", method.init = "Mead", method.robust = "squared",
+=======
+  trend = "auto", method.init = "Mead", method.robust = NULL,
+>>>>>>> 7bd619d2a2f1b9cf8f702fbc767727e760225d11
   method.optim = "Nelder-Mead", use.Hessian = FALSE, level = 0.9999,
   failure.message = FALSE, upperl = NULL, lowerl = NULL, ...)
 }
