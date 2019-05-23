@@ -155,7 +155,7 @@ response variable
              data = drc_error_2, 
              method.optim = "CG", 
              trend = "decreasing" )
-  d <- plot(c, x.breaks = c(.00135, .0135, .135, 1.35, 13.5))
+  d <- plot(c, breaks.x = c(.00135, .0135, .135, 1.35, 13.5))
   d + theme_grey()
 }
 \seealso{

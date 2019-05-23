@@ -238,7 +238,7 @@ dr4pl.default <- function(dose,
   types.trend <- c("auto", "decreasing", "increasing")
   types.method.init <- c("logistic", "Mead")
   types.method.robust <- c("squared","absolute", "Huber", "Tukey")
-  types.method.optim <- c("Nelder-Mead", "BFGS", "CG", "SANN")
+  types.method.optim <- c("Nelder-Mead", "BFGS", "L-BFGS-B", "CG", "SANN")
   
   ### Check errors in functions arguments
   if(!is.numeric(dose)||!is.numeric(response)) {
@@ -591,7 +591,7 @@ dr4plEst <- function(dose, response,
     #Impose constraints on upper limit and or lower limit
     #"upperl" and "lowerl"
     if(!is.null(upperl)&!is.null(lowerl)){
-      if(upperl<lowerl) {
+      if(any(upperl<lowerl)) {
         stop("upperl must be greater than lowerl")
       }
     }
