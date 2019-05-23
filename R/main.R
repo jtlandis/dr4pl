@@ -257,8 +257,6 @@ dr4pl.default <- function(dose,
   grep.var <- grep(pattern = method.init, x = types.method.init, ignore.case = T)
   if(length(grep.var)==1){
     method.init <- types.method.init[grep.var]
-  } else if(length(grep.var)==2&&all(grep.var%in%c(2,3))){
-    method.init <- types.method.init[2]
   } else {  
     stop(paste(sep = "","method.init: \"",method.init,"\" is not specific enough. \n
                The initialization method name should be one of \"logistic\" and \"Mead\"."))
@@ -278,6 +276,8 @@ dr4pl.default <- function(dose,
   grep.var <- grep(pattern = method.optim, x = types.method.optim, ignore.case = T)
   if(length(grep.var)==1){
     method.optim <- types.method.optim[grep.var]
+  } else if(length(grep.var)==2&&all(grep.var%in%c(2,3))){
+    method.init <- types.method.init[2]
   } else {
     stop(paste(sep = "","method.optim: \"",method.optim,"\" is not specific enough. \n
                The optimization method name should be one of \"Nelder-Mead\", \"BFGS\",
